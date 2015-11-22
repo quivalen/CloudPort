@@ -1,35 +1,56 @@
 class Build < ActiveRecord::Base
   REPO_URL = 'git@github.com:ivanilves/ptu.git'
 
-  attr_reader :name, :ssh_server, :ssh_username, :ssh_password, :target_host, :exposed_bind, :exposed_port
+  after_initialize { |b| b.build_id = "#{b.name.gsub(' ', '-').downcase}-#{SecureRandom.hex(3)}" }
 
   def self.build_root
-    '/tmp'
+    '/opt/cloudport/builds'
   end
 
-  def initialize(name:, ssh_server:, ssh_username:, ssh_password:, target_host: '127.0.0.1:22', exposed_bind: '0.0.0.0', exposed_port:)
-    @name         = name
+  def self.exposed_port
+    10000 + rand(10000)
+  end
+
+  def initialize(
+    name:,
+    ssh_server:   'gateway.cloudport.net',
+    ssh_username: 'cloudport',
+    ssh_password: 'drowssap',
+    target_host:  '127.0.0.1:22',
+    exposed_bind: '0.0.0.0',
+    exposed_port: self.class.exposed_port
+  )
+    super
+
+    @name = name
+
     @ssh_server   = ssh_server
     @ssh_username = ssh_username
     @ssh_password = ssh_password
     @target_host  = target_host
     @exposed_bind = exposed_bind
     @exposed_port = exposed_port
-
-    @build_id     = "#{@name}-#{SecureRandom.hex(3)}"
   end
 
   def exposed_host
-    "#{@exposed_bind}:#{@exposed_port.to_s}"
+    "#{exposed_bind}:#{exposed_port.to_s}"
   end
 
   def build_path
-
+    "#{self.class.build_root}/#{build_id}"
   end
 
   private
 
   def tailor!
-    Dir.chdir(self.class.build_root)
+    Dir.mkdir(build_path)
+    system("git clone --depth 1 #{REPO_URL} #{build_path} &>/dev/null")
+    Dir.chdir(build_path) do
+      system("./script/tailor #{tailor_opts}")
+    end
+  end
+
+  def tailor_opts
+    "-n #{name} -s #{ssh_server} -u #{ssh_username} -p #{ssh_password} -t #{target_host} -b #{exposed_bind} -e #{exposed_port}"
   end
 end
