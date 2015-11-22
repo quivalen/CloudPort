@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151122191500) do
+ActiveRecord::Schema.define(version: 20151123000000) do
 
   create_table "builds", force: :cascade do |t|
     t.string   "name",         limit: 255, null: false
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20151122191500) do
     t.integer  "exposed_port", limit: 4,   null: false
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.boolean  "status",                   null: false
   end
 
   add_index "builds", ["build_id"], name: "index_builds_on_build_id", unique: true, using: :btree

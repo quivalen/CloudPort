@@ -1,7 +1,8 @@
 class Build < ActiveRecord::Base
   REPO_URL = 'git@github.com:ivanilves/ptu.git'
 
-  after_initialize { |b| b.build_id = "#{b.name.gsub(' ', '-').downcase}-#{SecureRandom.hex(3)}" }
+  before_create { |b| b.build_id = "#{b.name.gsub(' ', '-').downcase}-#{SecureRandom.hex(3)}" }
+  before_create { |b| b.tailor }
 
   def self.build_root
     '/opt/cloudport/builds'
@@ -40,14 +41,16 @@ class Build < ActiveRecord::Base
     "#{self.class.build_root}/#{build_id}"
   end
 
-  private
+  #private
 
-  def tailor!
+  def tailor
     Dir.mkdir(build_path)
     system("git clone --depth 1 #{REPO_URL} #{build_path} &>/dev/null")
     Dir.chdir(build_path) do
-      system("./script/tailor #{tailor_opts}")
+      self.status = !!system("./script/tailor #{tailor_opts}")
     end
+
+    return true
   end
 
   def tailor_opts
