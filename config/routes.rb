@@ -53,4 +53,7 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  # ptu builds
+  resources :builds, :defaults => { :format => 'json' }
 end
