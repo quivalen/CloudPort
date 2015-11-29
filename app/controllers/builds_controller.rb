@@ -1,10 +1,25 @@
 class BuildsController < ApplicationController
 
-  def index
-  @builds = Build.all
-    respond_to do |format|
-      format.json { render json: @builds }
-      format.xml  { render xml:  @builds }
+  def create
+    name        = params[:name].strip
+    target_host = "#{params[:target_host].strip}:#{params[:target_port]}"
+
+    @build = Build.new(name: name, target_host: target_host)
+
+    if @build.save
+      render json: @build.build_id
+    else
+      render nothing: true, status: :unprocessable_entity
+    end
+  end
+
+  def show
+    @build = Build.find_by_build_id(params[:id])
+
+    if @build
+      render json: @build
+    else
+      render nothing: true, status: :not_found
     end
   end
 

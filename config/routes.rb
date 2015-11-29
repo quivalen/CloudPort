@@ -55,5 +55,5 @@ Rails.application.routes.draw do
   #   end
 
   # ptu builds
-  resources :builds, :defaults => { :format => 'json' }
+  resources :builds
 end

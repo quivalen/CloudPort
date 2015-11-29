@@ -1,0 +1,7 @@
+<%= form_tag do %>
+  <%= label_tag(:build, 'Create build:') %>
+  <%= text_field_tag(:name, 'name') %>
+  <%= text_field_tag(:target_host, 'localhost') %>
+  <%= number_field_tag(:target_port, 22, min: 1, max: 65535) %>
+  <%= submit_tag("Go!") %>
+<% end %>
