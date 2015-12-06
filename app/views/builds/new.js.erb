@@ -1,0 +1,18 @@
+var jqxhr = $.post(
+  '/builds/create',
+  { name: '<%= @name %>', target_host: '<%= @target_host %>' }
+);
+
+jqxhr.done(
+  function(buildID) {
+    window.location = '/builds/show/' + buildID
+  }
+);
+
+jqxhr.fail(
+  function(x) {
+    alert('ERROR: ' + JSON.stringify(x));
+  }
+);
+
+$( 'body' ).html( '<img src="/images/ajax-loader.gif" />' );

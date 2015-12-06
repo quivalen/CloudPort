@@ -1,0 +1,5 @@
+<ul>
+<% @build.binary_files.each do |file_name| %>
+<li><a href="<%= url_for(action: :download, id: @build.build_id, file_name: file_name) %>"><%= file_name %></a></li>
+<% end %>
+</ul>

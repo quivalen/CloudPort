@@ -1,4 +1,4 @@
-<%= form_tag do %>
+<%= form_tag('/builds', remote: true) do %>
   <%= label_tag(:build, 'Create build:') %>
   <%= text_field_tag(:name, 'name') %>
   <%= text_field_tag(:target_host, 'localhost') %>

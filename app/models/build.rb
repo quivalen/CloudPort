@@ -6,15 +6,15 @@ class Build < ActiveRecord::Base
   after_destroy :delete_tailored_build
 
   def self.build_root
-    CloudPort::Application.config.build_root
+    @@build_root ||= CloudPort::Application.config.build_root
   end
 
   def self.repo_url
-    ENV['PTU_REPO_URL'].strip || 'git@github.com:ivanilves/ptu.git'
+    @@repo_url ||= ENV['PTU_REPO_URL'].strip || 'git@github.com:ivanilves/ptu.git'
   end
 
   def self.tailor_command
-    ENV['PTU_TAILOR_COMMAND'].strip || 'script/tailor'
+    @@tailor_command ||= ENV['PTU_TAILOR_COMMAND'].strip || 'script/tailor'
   end
 
   def self.random_exposed_port
@@ -46,7 +46,22 @@ class Build < ActiveRecord::Base
   end
 
   def build_path
-    "#{self.class.build_root}/#{self.build_id}"
+    @build_path ||= "#{self.class.build_root}/#{self.build_id}"
+  end
+
+  def binary_path
+    @binary_path ||= "#{build_path}/bin"
+  end
+
+  def binary_files
+    unless @binary_files
+      @binary_files = []
+      Dir.new(binary_path).each do |f|
+        @binary_files << f if f.match(/^ptu-/)
+      end
+    end
+
+    @binary_files
   end
 
   private
@@ -58,7 +73,7 @@ class Build < ActiveRecord::Base
       self.status = !!system("#{self.class.tailor_command} #{tailor_options} &>tailor.log")
     end
 
-    return true
+    !!self.status
   end
 
   def tailor_options
