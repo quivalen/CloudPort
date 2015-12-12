@@ -1,6 +1,6 @@
 var jqxhr = $.post(
   '/builds/create',
-  { name: '<%= @name %>', target_host: '<%= @target_host %>' }
+  { target_host: '<%= @target_host %>' }
 );
 
 jqxhr.done(

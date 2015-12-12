@@ -1,12 +1,11 @@
 class BuildsController < ApplicationController
 
   def new
-    @name        = params[:name].strip
     @target_host = "#{params[:target_host].strip}:#{params[:target_port]}"
   end
 
   def create
-    @build = Build.new(name: params[:name], target_host: params[:target_host])
+    @build = Build.new(target_host: params[:target_host])
 
     if @build.save
       render text: @build.build_id

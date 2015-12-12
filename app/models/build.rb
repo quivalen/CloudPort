@@ -22,7 +22,7 @@ class Build < ActiveRecord::Base
   end
 
   def initialize(
-    name:         'dummy',
+    name:         'cloudport',
     ssh_server:   'gateway.cloudport.net',
     ssh_username: 'cloudport',
     ssh_password: 'drowssap',
