@@ -1,6 +1,9 @@
+<div class="viewport">
 <%= form_tag('/builds', remote: true) do %>
-  <%= label_tag(:give_access, 'Give access to:') %>
+  <%= label_tag(:expose, 'Expose:') %>
   <%= text_field_tag(:target_host, 'localhost') %>
   <%= number_field_tag(:target_port, 22, min: 1, max: 65535) %>
   <%= submit_tag("Go!") %>
 <% end %>
+<p class="hint">Use this form to generate your own personalized tunnel application</p>
+</div>

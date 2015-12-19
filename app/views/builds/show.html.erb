@@ -1,5 +1,10 @@
+<% @title = "Build: #{@build.build_id}" %>
+<div class="viewport">
+<h4>Build <%= @build.build_id %> for <%= @build.target_host %> is ready!</h4>
 <ul>
 <% @build.binary_files.each do |file_name| %>
-<li><a href="<%= url_for(action: :download, id: @build.build_id, file_name: file_name) %>"><%= file_name %></a></li>
+<li><a href="<%= url_for(action: :download, id: @build.build_id, file_name: file_name) %>">[ <%= file_name %> ]</a></li>
 <% end %>
 </ul>
+<p class="hint">Just download application for your operating system and run it ;)</p>
+</div>
