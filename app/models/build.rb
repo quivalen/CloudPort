@@ -1,31 +1,46 @@
 class Build < ActiveRecord::Base
-  BASE_PORT = 10000
+  BASE_PORT   = 10000
+  PORT_OFFSET = 10000
+
+  PTU_REPO_URL       = 'git@github.com:ivanilves/ptu.git'
+  PTU_TAILOR_COMMAND = 'script/tailor'
+  BINARY_FILE_MATCH  = /^ptu-/
+
+  DOCKER_IMAGE = 'rastasheep/ubuntu-sshd:14.04'
 
   before_create { |b| b.build_id = SecureRandom.hex(7) }
+
   before_create :create_tailored_build
   after_destroy :delete_tailored_build
+
+  before_create :create_docker_container
+  after_destroy :delete_docker_container
 
   def self.build_root
     @@build_root ||= CloudPort::Application.config.build_root
   end
 
   def self.repo_url
-    @@repo_url ||= ENV['PTU_REPO_URL'].strip || 'git@github.com:ivanilves/ptu.git'
+    @@repo_url ||= ENV['PTU_REPO_URL'].strip || PTU_REPO_URL
   end
 
   def self.tailor_command
-    @@tailor_command ||= ENV['PTU_TAILOR_COMMAND'].strip || 'script/tailor'
+    @@tailor_command ||= ENV['PTU_TAILOR_COMMAND'].strip || PTU_TAILOR_COMMAND
+  end
+
+  def self.random_password
+    SecureRandom.hex(20)
   end
 
   def self.random_exposed_port
-    BASE_PORT + rand(10000)
+    BASE_PORT + rand(PORT_OFFSET)
   end
 
   def initialize(
-    name:         'cloudport',
-    ssh_server:   'gateway.cloudport.net',
-    ssh_username: 'cloudport',
-    ssh_password: 'drowssap',
+    name:         Rails.application.class.to_s.split("::").first.downcase,
+    ssh_server:   'echo.cloudport.net',
+    ssh_username: 'root',
+    ssh_password: self.class.random_password,
     target_host:  '127.0.0.1:22',
     exposed_bind: '0.0.0.0',
     exposed_port: self.class.random_exposed_port
@@ -45,8 +60,16 @@ class Build < ActiveRecord::Base
     "#{exposed_bind}:#{exposed_port.to_s}"
   end
 
+  def ssh_server
+    "#{@ssh_server}:#{ssh_port.to_s}"
+  end
+
+  def ssh_port
+    @ssh_port ||= exposed_port + PORT_OFFSET
+  end
+
   def build_path
-    @build_path ||= "#{self.class.build_root}/#{self.build_id}"
+    @build_path ||= "#{self.class.build_root}/#{build_id}"
   end
 
   def binary_path
@@ -57,11 +80,15 @@ class Build < ActiveRecord::Base
     unless @binary_files
       @binary_files = []
       Dir.new(binary_path).each do |f|
-        @binary_files << f if f.match(/^ptu-/)
+        @binary_files << f if f.match(BINARY_FILE_MATCH)
       end
     end
 
     @binary_files
+  end
+
+  def docker_container
+    @docker_container ||= Docker::Container.get(docker_container_id)
   end
 
   private
@@ -73,7 +100,7 @@ class Build < ActiveRecord::Base
       self.status = !!system("#{self.class.tailor_command} #{tailor_options} &>tailor.log")
     end
 
-    !!self.status
+    !!status
   end
 
   def tailor_options
@@ -83,4 +110,40 @@ class Build < ActiveRecord::Base
   def delete_tailored_build
     FileUtils.rm_rf(build_path)
   end
+
+  def create_docker_container
+    guest_ssh_port     = '22/tcp'
+    host_ssh_port      = ssh_port.to_s
+    guest_exposed_port = "#{exposed_port.to_s}/tcp"
+    host_exposed_port  = exposed_port.to_s
+
+    container = Docker::Container.create(
+      'Image' => DOCKER_IMAGE,
+      'ExposedPorts' => {
+        guest_ssh_port => {}, guest_exposed_port => {},
+      },
+      'PortBindings' => {
+        guest_ssh_port      => [{ 'HostPort' => host_ssh_port }],
+        guest_exposed_port  => [{ 'HostPort' => host_exposed_port }],
+      },
+      'name' => build_id,
+    )
+
+    container.start
+
+    container.exec(
+      ['passwd', 'root'],
+      stdin: StringIO.new("#{ssh_password}\n#{ssh_password}")
+    )
+
+    self.docker_container_id = container.id
+  end
+
+  def delete_docker_container
+    container = docker_container
+
+    container.stop if container.info['State']['Running']
+    container.delete
+  end
+
 end

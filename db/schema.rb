@@ -11,22 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151123223424) do
+ActiveRecord::Schema.define(version: 20151213225822) do
 
   create_table "builds", force: :cascade do |t|
-    t.string   "name",         limit: 255, null: false
-    t.string   "build_id",     limit: 255, null: false
-    t.string   "ssh_server",   limit: 255, null: false
-    t.string   "ssh_username", limit: 255, null: false
-    t.string   "ssh_password", limit: 255, null: false
-    t.string   "target_host",  limit: 255, null: false
-    t.string   "exposed_bind", limit: 255, null: false
-    t.integer  "exposed_port", limit: 4,   null: false
-    t.boolean  "status",                   null: false
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.string   "name",                limit: 255, null: false
+    t.string   "build_id",            limit: 255, null: false
+    t.string   "docker_container_id", limit: 255, null: false
+    t.string   "ssh_server",          limit: 255, null: false
+    t.string   "ssh_username",        limit: 255, null: false
+    t.string   "ssh_password",        limit: 255, null: false
+    t.string   "target_host",         limit: 255, null: false
+    t.string   "exposed_bind",        limit: 255, null: false
+    t.integer  "exposed_port",        limit: 4,   null: false
+    t.boolean  "status",                          null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   add_index "builds", ["build_id"], name: "index_builds_on_build_id", unique: true, using: :btree
+  add_index "builds", ["docker_container_id"], name: "index_builds_on_docker_container_id", unique: true, using: :btree
 
 end

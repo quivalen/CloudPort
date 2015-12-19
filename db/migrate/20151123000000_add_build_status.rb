@@ -4,6 +4,6 @@ class AddBuildStatus < ActiveRecord::Migration
   end
 
   def down
-    add_column :builds, :status
+    remove_column :builds, :status
   end
 end

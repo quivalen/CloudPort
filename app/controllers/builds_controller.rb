@@ -1,7 +1,7 @@
 class BuildsController < ApplicationController
 
   def new
-    @target_host = "#{params[:target_host].strip}:#{params[:target_port]}"
+    @target_host = "#{params[:target_host].strip}:#{params[:target_port].strip}"
   end
 
   def create
