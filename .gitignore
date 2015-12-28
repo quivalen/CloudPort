@@ -16,7 +16,7 @@
 *.swp
 
 # Ignore Vagrant working directory
-*/.vagrant
+.vagrant
 
 # Ignore Ansible secrets
 secrets.yml
