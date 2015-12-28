@@ -1,0 +1,28 @@
+---
+- hosts: cloudport
+  vars:
+    app_user_uid: 777
+    app_user_gid: 777
+    app_user_home: /deploy
+    ruby_version: 2.2
+  sudo: yes
+  tasks:
+    - name: Update operating system
+      apt: upgrade=dist update_cache=yes dpkg_options='force-confold,force-confdef'
+    - name: Install Git
+      apt: pkg=git state=latest
+    - name: Add Brightbox PPA
+      apt_repository: repo='ppa:brightbox/ruby-ng' state=present update_cache=true
+    - name: Install Ruby
+      apt: pkg={{item}} state=latest
+      with_items:
+        - "ruby{{ruby_version}}"
+        - "ruby{{ruby_version}}-dev"
+    - name: Install node.js
+      apt: pkg=nodejs state=latest
+    - name: Create CloudPort user group
+      group: name=cloudport gid={{app_user_gid}} state=present
+    - name: Create CloudPort user
+      user: name=cloudport uid={{app_user_uid}} group=cloudport home={{app_user_home}} shell=/bin/bash comment="CloudPort application user" state=present
+    - name: Set deploy path permissions
+      file: name={{app_user_home}} owner=cloudport group=cloudport mode=0755 state=directory

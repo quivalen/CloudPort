@@ -1,0 +1,23 @@
+---
+- hosts: cloudport
+  vars:
+    app_repo: https://github.com/ivanilves/CloudPort.git
+    app_path: /deploy/cloudport
+    app_version: master
+    ruby_version: 2.2
+    bundler_version: 1.11.2
+    gem_path: "/deploy/.gem/ruby/{{ruby_version}}.0"
+  sudo: yes
+  sudo_user: cloudport
+  tasks:
+    - name: Install bundler
+      gem: name=bundler version={{bundler_version}}
+    - name: Deploy CloudPort
+      git:  repo={{app_repo}} dest={{app_path}} version={{app_version}}
+      notify:
+        - Bundle install
+  handlers:
+    - name: Bundle install
+      shell: "{{gem_path}}/gems/bundler-{{bundler_version}}/exe/bundle --retry=5 --deployment"
+      args:
+        chdir: "{{app_path}}"

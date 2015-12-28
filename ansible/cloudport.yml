@@ -1,0 +1,5 @@
+---
+- include: cloudport/general.yml
+- include: cloudport/database.yml
+- include: cloudport/application.yml
+- include: cloudport/web.yml

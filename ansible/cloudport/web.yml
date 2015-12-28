@@ -1,0 +1,12 @@
+---
+- hosts: cloudport
+  sudo: yes
+  tasks:
+    - name: Install Nginx
+      apt: pkg=nginx state=latest
+      notify:
+        - Start Nginx
+  handlers:
+    - name: Start Nginx
+      service: name=nginx state=started
+

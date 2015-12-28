@@ -11,3 +11,12 @@
 /log/*
 !/log/.keep
 /tmp
+
+# Ignore Vim swap files
+*.swp
+
+# Ignore Vagrant working directory
+*/.vagrant
+
+# Ignore Ansible secrets
+secrets.yml
