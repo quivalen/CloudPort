@@ -1,15 +1,9 @@
 ---
 - hosts: cloudport
   vars:
-    app_user_home: /deploy
-    app_repo: https://github.com/ivanilves/CloudPort.git
-    app_path: /deploy/cloudport
-    app_version: master
-    ruby_version: 2.2
-    bundler_version: 1.11.2
-    gem_path: "/deploy/.gem/ruby/{{ruby_version}}.0"
   vars_files:
-    - secrets.yml
+    - ../variables.yml
+    - ../secrets.yml
   sudo: yes
   sudo_user: cloudport
   tasks:
@@ -24,7 +18,7 @@
         - Load database schema
   handlers:
     - name: Bundle install
-      shell: "{{gem_path}}/bin/bundle --retry=5 --deployment"
+      shell: "{{gem_path}}/bin/bundle --retry=5 --deployment --without '{{bundle_without}}'"
       args:
         chdir: "{{app_path}}"
     - name: Load database schema

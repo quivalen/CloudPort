@@ -1,10 +1,8 @@
 ---
 - hosts: cloudport
-  vars:
-    app_user_uid: 777
-    app_user_gid: 777
-    app_user_home: /deploy
-    ruby_version: 2.2
+  vars_files:
+    - ../variables.yml
+    - ../secrets.yml
   sudo: yes
   tasks:
     - name: Update operating system

@@ -1,9 +1,8 @@
 ---
 - hosts: cloudport
-  vars:
-    app_user_home: /deploy
   vars_files:
-    - secrets.yml
+    - ../variables.yml
+    - ../secrets.yml
   sudo: yes
   tasks:
     - name: Install MySQL

@@ -4,7 +4,7 @@
 EXPOSED_PORT_RANGE    = (10500..10599)
 SSH_SERVER_PORT_RANGE = (20500..20599)
 
-SECRETS_FILE = File.expand_path(File.dirname(__FILE__) + '/ansible/cloudport/secrets.yml')
+SECRETS_FILE = File.expand_path(File.dirname(__FILE__) + '/ansible/secrets.yml')
 unless File.exist?(SECRETS_FILE)
   require 'securerandom'
   require 'yaml'
