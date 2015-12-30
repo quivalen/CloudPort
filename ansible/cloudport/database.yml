@@ -1,5 +1,7 @@
 ---
 - hosts: cloudport
+  vars:
+    app_user_home: /deploy
   vars_files:
     - secrets.yml
   sudo: yes
@@ -30,12 +32,14 @@
     - name: Setup MySQL application user
       mysql_user: name=cloudport
                   priv=*.*:ALL
-                  host=127.0.0.1
-                  password=={{mysql_user_password}}
+                  host=localhost
+                  password={{mysql_user_password}}
                   check_implicit_admin=yes
                   login_user=root
                   login_password={{mysql_root_password}}
                   state=present
+    - name: Create application user my.cnf
+      template: src=templates/my.cnf.j2 dest="{{app_user_home}}/.my.cnf" owner=cloudport group=cloudport mode=0600
   handlers:
     - name: Start MySQL
       service: name=mysql state=started

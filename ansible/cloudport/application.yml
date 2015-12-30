@@ -1,6 +1,7 @@
 ---
 - hosts: cloudport
   vars:
+    app_user_home: /deploy
     app_repo: https://github.com/ivanilves/CloudPort.git
     app_path: /deploy/cloudport
     app_version: master
@@ -12,12 +13,21 @@
   tasks:
     - name: Install bundler
       gem: name=bundler version={{bundler_version}}
+    - name: Create application user custom shell rc
+      template: src=templates/bash_aliases.j2 dest="{{app_user_home}}/.bash_aliases" owner=cloudport group=cloudport mode=0644
     - name: Deploy CloudPort
-      git:  repo={{app_repo}} dest={{app_path}} version={{app_version}}
+      git:  repo={{app_repo}} dest={{app_path}} version={{app_version}} force=yes
       notify:
         - Bundle install
+        - Load database schema
   handlers:
     - name: Bundle install
-      shell: "{{gem_path}}/gems/bundler-{{bundler_version}}/exe/bundle --retry=5 --deployment"
+      shell: "{{gem_path}}/bin/bundle --retry=5 --deployment"
       args:
         chdir: "{{app_path}}"
+    - name: Load database schema
+      shell: "{{gem_path}}/bin/bundle exec rake db:schema:load && touch {{app_user_home}}/.db_schema_loaded"
+      args:
+        chdir: "{{app_path}}"
+        creates: "{{app_user_home}}/.db_schema_loaded"
+
