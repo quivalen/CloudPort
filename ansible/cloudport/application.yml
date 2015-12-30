@@ -8,6 +8,8 @@
     ruby_version: 2.2
     bundler_version: 1.11.2
     gem_path: "/deploy/.gem/ruby/{{ruby_version}}.0"
+  vars_files:
+    - secrets.yml
   sudo: yes
   sudo_user: cloudport
   tasks:
