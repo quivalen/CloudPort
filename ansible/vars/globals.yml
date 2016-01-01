@@ -16,6 +16,8 @@ app_log_path: "/var/log/{{app_name}}"
 app_pid_file: "/tmp/{{app_name}}.pid"
 app_upstart_file: "/etc/init/{{app_name}}.conf"
 mysql_app_username: "{{app_name}}"
+app_sudoers_file: "/etc/sudoers.d/{{app_name}}"
+app_reload_script: "{{app_path}}/script/reload-rails"
 
 ruby_version: 2.2
 bundler_version: 1.11.2
