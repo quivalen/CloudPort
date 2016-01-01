@@ -15,6 +15,7 @@ unless File.exist?(SECRETS_FILE)
   SECRETS = {
     'mysql_root_password' => SecureRandom.base64,
     'mysql_app_password'  => SecureRandom.base64,
+    'secret_key_base'     => SecureRandom.hex(64),
   }
 
   File.open(SECRETS_FILE, 'w') {|f| f.write SECRETS.to_yaml }
