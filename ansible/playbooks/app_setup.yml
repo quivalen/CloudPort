@@ -24,5 +24,7 @@
       user: name={{app_user_name}} uid={{app_user_uid}} group={{app_group_name}} home={{app_user_home}} shell=/bin/bash comment="CloudPort application user" state=present
     - name: Create application config
       template: src=../templates/config.j2 dest={{app_conf_file}} owner={{app_user_name}} group={{app_group_name}} mode=0640
-    - name: Create deploy path
+    - name: Create application data path
+      file: name={{app_data_path}} owner={{app_user_name}} group={{app_group_name}} mode=0750 state=directory
+    - name: Create application user home path
       file: name={{app_user_home}} owner={{app_user_name}} group={{app_group_name}} mode=0755 state=directory

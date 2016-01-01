@@ -9,6 +9,7 @@ app_group_name: "{{app_name}}"
 app_user_uid: 777
 app_user_gid: 777
 app_user_bashrc: "{{app_user_home}}/.bash_aliases"
+app_data_path: "/opt/{{app_name}}"
 mysql_app_username: "{{app_name}}"
 
 ruby_version: 2.2
