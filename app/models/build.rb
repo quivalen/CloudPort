@@ -21,11 +21,11 @@ class Build < ActiveRecord::Base
   end
 
   def self.repo_url
-    @@repo_url ||= ENV['PTU_REPO_URL'].strip || PTU_REPO_URL
+    @@repo_url ||= ENV['PTU_REPO_URL'] || PTU_REPO_URL
   end
 
   def self.tailor_command
-    @@tailor_command ||= ENV['PTU_TAILOR_COMMAND'].strip || PTU_TAILOR_COMMAND
+    @@tailor_command ||= ENV['PTU_TAILOR_COMMAND'] || PTU_TAILOR_COMMAND
   end
 
   def self.random_password
