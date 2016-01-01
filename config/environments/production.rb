@@ -52,7 +52,7 @@ Rails.application.configure do
   # config.log_tags = [ :subdomain, :uuid ]
 
   # Use a different logger!
-  config.logger = ActiveSupport::TaggedLogging.new(Logger.new('/var/log/cloudport'))
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new('/var/log/cloudport/production.log'))
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
