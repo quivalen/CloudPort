@@ -10,8 +10,8 @@ fi
 
 STATUS=$(status cloudport | cut -f2 -d" ")
 
-if [ ${STATUS} == 'start/running' ]; then
-  reload ${SERVICE}
+if [ ${STATUS} == 'start/running,' ]; then
+  restart ${SERVICE}
 else
   start ${SERVICE}
 fi

@@ -18,6 +18,7 @@
         - Create database
         - Load database schema
         - Run database migrations
+        - Reload application server
   handlers:
     - name: Bundle install
       shell: "{{bundle}} install --retry=5 --deployment --without '{{bundle_without}}'"
@@ -37,4 +38,5 @@
       shell: "{{bundle}} exec rake db:migrate"
       args:
         chdir: "{{app_path}}"
-
+    - name: Reload application server
+      shell: "{{app_reload_script}}"
