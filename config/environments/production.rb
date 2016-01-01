@@ -78,5 +78,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Where do we place ptu builds?
-  config.build_root = '/opt/cloudport/builds'
+  config.build_root = '/data/builds'
 end
