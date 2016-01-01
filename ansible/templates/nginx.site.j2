@@ -1,0 +1,14 @@
+#
+# A very basic Nginx configuration
+#
+server {
+	listen 80 default_server;
+
+	# Make site accessible from http://localhost/
+	server_name localhost;
+
+	# Proxy everything to the Rails backend
+	location / {
+		proxy_pass http://{{app_server_bind}}:{{app_server_port}};
+	}
+}

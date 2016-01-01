@@ -30,6 +30,12 @@
       template: src=../templates/upstart.conf.j2 dest={{app_upstart_file}} owner={{app_user_name}} group={{app_group_name}} mode=0644
       notify:
         - Reload Upstart configuration
+    - name: Create Nginx site configuration
+      template: src=../templates/nginx.site.j2 dest=/etc/nginx/sites-available/default owner=root group=root mode=0644
+      notify:
+        - Reload Nginx
   handlers:
     - name: Reload Upstart configuration
       shell: initctl reload-configuration
+    - name: Reload Nginx
+      service: name=nginx state=reloaded

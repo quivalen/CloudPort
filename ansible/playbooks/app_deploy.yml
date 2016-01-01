@@ -39,4 +39,4 @@
       args:
         chdir: "{{app_path}}"
     - name: Reload application server
-      shell: "{{app_reload_script}}"
+      shell: "sudo {{app_reload_script}}"

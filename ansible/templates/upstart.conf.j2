@@ -16,6 +16,7 @@ umask 022
 chdir {{app_path}}
 
 script
+  . {{app_conf_file}}
   . {{app_user_bashrc}}
   bundle exec rails server --port={{app_server_port}} --binding={{app_server_bind}} --pid={{app_pid_file}}
 end script
