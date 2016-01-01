@@ -1,0 +1,28 @@
+---
+- hosts: all
+  vars_files:
+    - ../vars/globals.yml
+    - ../vars/secrets.yml
+  sudo: yes
+  tasks:
+    - name: Update operating system
+      apt: upgrade=dist update_cache=yes dpkg_options='force-confold,force-confdef'
+    - name: Install Git
+      apt: pkg=git state=latest
+    - name: Add Brightbox PPA
+      apt_repository: repo='ppa:brightbox/ruby-ng' state=present update_cache=true
+    - name: Install Ruby
+      apt: pkg={{item}} state=latest
+      with_items:
+        - "ruby{{ruby_version}}"
+        - "ruby{{ruby_version}}-dev"
+    - name: Install node.js
+      apt: pkg=nodejs state=latest
+    - name: Create application user group
+      group: name={{app_group_name}} gid={{app_user_gid}} state=present
+    - name: Create application user
+      user: name={{app_user_name}} uid={{app_user_uid}} group={{app_group_name}} home={{app_user_home}} shell=/bin/bash comment="CloudPort application user" state=present
+    - name: Create application config
+      template: src=../templates/config.j2 dest={{app_conf_file}} owner={{app_user_name}} group={{app_group_name}} mode=0640
+    - name: Create deploy path
+      file: name={{app_user_home}} owner={{app_user_name}} group={{app_group_name}} mode=0755 state=directory

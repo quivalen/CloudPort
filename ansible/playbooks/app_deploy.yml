@@ -1,0 +1,40 @@
+---
+- hosts: all
+  vars:
+  vars_files:
+    - ../vars/globals.yml
+    - ../vars/secrets.yml
+  sudo: yes
+  sudo_user: "{{app_user_name}}"
+  tasks:
+    - name: Install bundler
+      gem: name=bundler version={{bundler_version}}
+    - name: Create application user custom shell rc
+      template: src=../templates/bash_aliases.j2 dest={{app_user_bashrc}} owner={{app_user_name}} group={{app_group_name}} mode=0644
+    - name: Get application code from Git
+      git:  repo={{app_repo}} dest={{app_path}} version={{app_version}} force=yes
+      notify:
+        - Bundle install
+        - Create database
+        - Load database schema
+        - Run database migrations
+  handlers:
+    - name: Bundle install
+      shell: "{{bundle}} install --retry=5 --deployment --without '{{bundle_without}}'"
+      args:
+        chdir: "{{app_path}}"
+    - name: Create database
+      shell: "{{bundle}} exec rake db:create && touch {{db_created_flag}}"
+      args:
+        chdir: "{{app_path}}"
+        creates: "{{db_created_flag}}"
+    - name: Load database schema
+      shell: "{{bundle}} exec rake db:schema:load && touch {{db_schema_loaded_flag}}"
+      args:
+        chdir: "{{app_path}}"
+        creates: "{{db_schema_loaded_flag}}"
+    - name: Run database migrations
+      shell: "{{bundle}} exec rake db:migrate"
+      args:
+        chdir: "{{app_path}}"
+

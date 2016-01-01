@@ -1,17 +1,20 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-EXPOSED_PORT_RANGE    = (10500..10599)
-SSH_SERVER_PORT_RANGE = (20500..20599)
+PLAYBOOK_YML = lambda do
+  return "ansible/playbooks/#{ENV['PLAYBOOK'].strip}.yml" if ENV['PLAYBOOK']
 
-SECRETS_FILE = File.expand_path(File.dirname(__FILE__) + '/ansible/secrets.yml')
+  'ansible/cloudport.yml'
+end.call
+
+SECRETS_FILE = File.expand_path(File.dirname(__FILE__) + '/ansible/vars/secrets.yml')
 unless File.exist?(SECRETS_FILE)
   require 'securerandom'
   require 'yaml'
 
   SECRETS = {
     'mysql_root_password' => SecureRandom.base64,
-    'mysql_user_password' => SecureRandom.base64,
+    'mysql_app_password'  => SecureRandom.base64,
   }
 
   File.open(SECRETS_FILE, 'w') {|f| f.write SECRETS.to_yaml }
@@ -38,8 +41,7 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  EXPOSED_PORT_RANGE.each    { |i| config.vm.network "forwarded_port", guest: i, host: i }
-  SSH_SERVER_PORT_RANGE.each { |i| config.vm.network "forwarded_port", guest: i, host: i }
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -79,7 +81,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.verbose   = "v"
-    ansible.playbook  = "ansible/cloudport.yml"
+    ansible.playbook  = PLAYBOOK_YML
   end
 
   config.vm.hostname = 'cloudport'            # Set customized hostname

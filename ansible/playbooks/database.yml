@@ -1,8 +1,8 @@
 ---
-- hosts: cloudport
+- hosts: all
   vars_files:
-    - ../variables.yml
-    - ../secrets.yml
+    - ../vars/globals.yml
+    - ../vars/secrets.yml
   sudo: yes
   tasks:
     - name: Install MySQL
@@ -29,17 +29,16 @@
         - 127.0.0.1
         - ::1
     - name: Setup MySQL application user
-      mysql_user: name=cloudport
+      mysql_user: name={{mysql_app_username}}
                   priv=*.*:ALL
                   host=localhost
-                  password={{mysql_user_password}}
+                  password={{mysql_app_password}}
                   check_implicit_admin=yes
                   login_user=root
                   login_password={{mysql_root_password}}
                   state=present
     - name: Create application user my.cnf
-      template: src=templates/my.cnf.j2 dest="{{app_user_home}}/.my.cnf" owner=cloudport group=cloudport mode=0600
+      template: src=../templates/my.cnf.j2 dest="{{app_user_home}}/.my.cnf" owner={{app_user_name}} group={{app_group_name}} mode=0600
   handlers:
     - name: Start MySQL
       service: name=mysql state=started
-

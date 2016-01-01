@@ -1,0 +1,20 @@
+app_name: cloudport
+app_repo: https://github.com/ivanilves/CloudPort.git
+app_version: master
+app_user_home: /deploy
+app_path: "{{app_user_home}}/{{app_name}}"
+app_conf_file: "/etc/default/{{app_name}}"
+app_user_name: "{{app_name}}"
+app_group_name: "{{app_name}}"
+app_user_uid: 777
+app_user_gid: 777
+app_user_bashrc: "{{app_user_home}}/.bash_aliases"
+mysql_app_username: "{{app_name}}"
+
+ruby_version: 2.2
+bundler_version: 1.11.2
+bundle_without: "development test"
+gem_path: "/deploy/.gem/ruby/{{ruby_version}}.0"
+bundle: ". {{app_conf_file}} && {{gem_path}}/bin/bundle"
+db_created_flag: "{{app_user_home}}/.db_created"
+db_schema_loaded_flag: "{{app_user_home}}/.db_schema_loaded"
