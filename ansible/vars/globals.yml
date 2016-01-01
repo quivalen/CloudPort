@@ -10,6 +10,11 @@ app_user_uid: 777
 app_user_gid: 777
 app_user_bashrc: "{{app_user_home}}/.bash_aliases"
 app_data_path: "/opt/{{app_name}}"
+app_server_port: 8000
+app_server_bind: 127.0.0.1
+app_pid_dir: "{{app_user_home}}/run"
+app_pid_file: "{{app_pid_dir}}/{{app_name}}.pid"
+app_upstart_file: "/etc/init/{{app_name}}.conf"
 mysql_app_username: "{{app_name}}"
 
 ruby_version: 2.2

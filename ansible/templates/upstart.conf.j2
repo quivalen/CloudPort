@@ -1,0 +1,21 @@
+#
+# Simple Rails application server instance
+#
+description	"Rails application server: {{app_name}}"
+author 		"Ivan Ilves <ivan.ilves@gmail.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+setuid {{app_user_name}}
+setgid {{app_group_name}}
+umask 022
+
+chdir {{app_path}}
+
+script
+  . {{app_user_bashrc}}
+  bundle exec rails server --port={{app_server_port}} --binding={{app_server_bind}} --pid={{app_pid_file}}
+end script
