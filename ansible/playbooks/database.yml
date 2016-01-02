@@ -37,8 +37,6 @@
                   login_user=root
                   login_password={{mysql_root_password}}
                   state=present
-    - name: Create application user my.cnf
-      template: src=../templates/my.cnf.j2 dest="{{app_user_home}}/.my.cnf" owner={{app_user_name}} group={{app_group_name}} mode=0600
   handlers:
     - name: Start MySQL
       service: name=mysql state=started
