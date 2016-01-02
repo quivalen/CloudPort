@@ -1,3 +1,6 @@
+---
+environment: production
+
 app_name: cloudport
 app_repo: https://github.com/ivanilves/CloudPort.git
 app_version: master
@@ -10,10 +13,11 @@ app_user_uid: 777
 app_user_gid: 777
 app_user_bashrc: "{{app_user_home}}/.bashrc"
 app_data_path: "/data"
+app_server_name: puma
 app_server_bind: 127.0.0.1
 app_server_port: 8000
+app_server_pid_file: "/var/run/{{app_name}}/{{app_server_name}}.pid"
 app_log_path: "/var/log/{{app_name}}"
-app_pid_file: "/var/run/{{app_name}}/{{app_name}}.pid"
 app_upstart_file: "/etc/init/{{app_name}}.conf"
 mysql_app_username: "{{app_name}}"
 app_sudoers_file: "/etc/sudoers.d/{{app_name}}"

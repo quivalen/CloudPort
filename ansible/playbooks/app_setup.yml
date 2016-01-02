@@ -28,6 +28,8 @@
       template: src=../templates/my.cnf.j2 dest="{{app_user_home}}/.my.cnf" owner={{app_user_name}} group={{app_group_name}} mode=0600
     - name: Create application sudoers.d config
       template: src=../templates/sudoers.d.j2 dest={{app_sudoers_file}} owner=root group=root mode=0440 validate="visudo -c -f %s"
+    - name: Create application logrotate.d config
+      template: src=../templates/logrotate.d.j2 dest="/etc/logrotate.d/{{app_name}}" owner=root group=root mode=0644
     - name: Create application Upstart config
       template: src=../templates/upstart.conf.j2 dest={{app_upstart_file}} owner={{app_user_name}} group={{app_group_name}} mode=0644
       notify:

@@ -1,0 +1,12 @@
+{{app_log_path}}/*.log {
+	daily
+	missingok
+	rotate 14
+	compress
+	delaycompress
+	notifempty
+	sharedscripts
+	postrotate
+		reload {{app_name}}
+	endscript
+}
