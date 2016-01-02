@@ -18,6 +18,7 @@
         - Create database
         - Load database schema
         - Run database migrations
+        - Ensure application PID directory
         - Reload application server
   handlers:
     - name: Bundle install
@@ -38,5 +39,7 @@
       shell: "{{bundle}} exec rake db:migrate"
       args:
         chdir: "{{app_path}}"
+    - name: Ensure application PID directory
+      shell: "sudo {{app_pid_dir_script}}"
     - name: Reload application server
       shell: "sudo {{app_reload_script}}"

@@ -20,10 +20,10 @@ pre-start script
 end script
 
 script
-  export HOME={{app_user_home}}
-
   . {{app_conf_file}}
-  . {{app_user_bashrc}}
+
+  export HOME={{app_user_home}}
+  export PATH="{{gem_path}}/bin:${PATH}"
 
   bundle exec rails server --port={{app_server_port}} --binding={{app_server_bind}} --pid={{app_pid_file}}
 end script
