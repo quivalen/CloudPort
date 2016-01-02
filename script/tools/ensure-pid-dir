@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Ensure PID dir exists and has right permissions
+#
+: ${APP_NAME:=cloudport}
+
+if [ ${UID} -ne 0 ]; then
+  echo "${0} must be run only by root!"
+  exit 1
+fi
+
+PID_DIR=/var/run/${APP_NAME}
+[ -d ${PID_DIR} ] || mkdir ${PID_DIR}
+chown ${APP_NAME} ${PID_DIR}
+chmod 0700 ${PID_DIR}

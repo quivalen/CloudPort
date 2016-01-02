@@ -15,6 +15,15 @@ umask 022
 
 chdir {{app_path}}
 
+pre-start script
+  sudo {{app_pid_dir_script}}
+end script
+
 script
-  {{bundle}} exec rails server --port={{app_server_port}} --binding={{app_server_bind}} --pid={{app_pid_file}}
+  export HOME={{app_user_home}}
+
+  . {{app_conf_file}}
+  . {{app_user_bashrc}}
+
+  bundle exec rails server --port={{app_server_port}} --binding={{app_server_bind}} --pid={{app_pid_file}}
 end script

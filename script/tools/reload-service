@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Reload application server (after code change/re-deploy)
+#
+: ${APP_NAME:=cloudport}
+
+if [ ${UID} -ne 0 ]; then
+  echo "${0} must be run only by root!"
+  exit 1
+fi
+
+STATUS=$(status ${APP_NAME} | cut -f2 -d" " | sed 's/,$//')
+
+if [ ${STATUS} == 'start/running' ]; then
+  restart ${APP_NAME}
+else
+  start ${APP_NAME}
+fi
