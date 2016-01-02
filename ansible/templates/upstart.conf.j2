@@ -19,7 +19,7 @@ pre-start script
   sudo {{app_pid_dir_script}}
 end script
 
-post-stop script
+pre-stop script
   kill $(cat {{app_server_pid_file}})
 end script
 
@@ -29,5 +29,5 @@ script
   export HOME={{app_user_home}}
   export PATH="{{gem_path}}/bin:${PATH}"
 
-  bundle exec {{app_server_name}} --bind {{app_server_bind}} --port {{app_server_port}} --environment {{app_env}} --pidfile {{app_server_pid_file}}
+  bundle exec {{app_server_name}} --bind {{app_server_bind}} --port {{app_server_port}} --environment {{app_env}} --tag {{app_name}} --pidfile {{app_server_pid_file}}
 end script
