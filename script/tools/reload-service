@@ -14,7 +14,7 @@ set -e
 STATUS=$(status ${APP_NAME} | cut -f2 -d" " | sed 's/,$//')
 
 if [ ${STATUS} == 'start/running' ]; then
-  restart ${APP_NAME}
+  reload ${APP_NAME}
 else
   start ${APP_NAME}
 fi
