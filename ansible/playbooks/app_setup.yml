@@ -19,11 +19,11 @@
     - name: Create application config
       template: src=../templates/config.j2 dest={{app_conf_file}} owner={{app_user_name}} group={{app_group_name}} mode=0640
     - name: Create application user home
-      file: name={{app_user_home}} owner={{app_user_name}} group={{app_group_name}} mode=0750 state=directory
+      file: name={{app_user_home}} owner={{app_user_name}} group={{app_group_name}} mode=0755 state=directory
     - name: Create application data path
-      file: name={{app_data_path}} owner={{app_user_name}} group={{app_group_name}} mode=0750 state=directory
+      file: name={{app_data_path}} owner={{app_user_name}} group={{app_group_name}} mode=0755 state=directory
     - name: Create application user log path
-      file: name={{app_log_path}} owner={{app_user_name}} group=adm mode=0750 state=directory
+      file: name={{app_log_path}} owner={{app_user_name}} group=adm mode=0755 state=directory
     - name: Create application user my.cnf
       template: src=../templates/my.cnf.j2 dest="{{app_user_home}}/.my.cnf" owner={{app_user_name}} group={{app_group_name}} mode=0600
     - name: Create application sudoers.d config

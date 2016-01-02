@@ -9,6 +9,8 @@ if [ ${UID} -ne 0 ]; then
   exit 1
 fi
 
+set -e
+
 STATUS=$(status ${APP_NAME} | cut -f2 -d" " | sed 's/,$//')
 
 if [ ${STATUS} == 'start/running' ]; then

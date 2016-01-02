@@ -1,9 +1,8 @@
 ---
-environment: production
-
 app_name: cloudport
 app_repo: https://github.com/ivanilves/CloudPort.git
 app_version: master
+app_env: production
 app_user_home: /deploy
 app_path: "{{app_user_home}}/{{app_name}}"
 app_conf_file: "/etc/default/{{app_name}}"

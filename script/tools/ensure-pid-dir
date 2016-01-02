@@ -9,7 +9,10 @@ if [ ${UID} -ne 0 ]; then
   exit 1
 fi
 
+set -e
+
 PID_DIR=/var/run/${APP_NAME}
+
 [ -d ${PID_DIR} ] || mkdir ${PID_DIR}
 chown ${APP_NAME} ${PID_DIR}
-chmod 0700 ${PID_DIR}
+chmod 0755 ${PID_DIR}
