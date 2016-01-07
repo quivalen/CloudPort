@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: cloudport
   vars_files:
     - ../vars/globals.yml
     - ../vars/secrets.yml
@@ -15,7 +15,7 @@
     - name: Create application user group
       group: name={{app_group_name}} gid={{app_user_gid}} state=present
     - name: Create application user
-      user: name={{app_user_name}} uid={{app_user_uid}} group={{app_group_name}} home={{app_user_home}} shell=/bin/bash comment="CloudPort application user" state=present
+      user: name={{app_user_name}} uid={{app_user_uid}} group={{app_group_name}} groups=docker home={{app_user_home}} shell=/bin/bash comment="CloudPort application user" state=present
     - name: Create application config
       template: src=../templates/config.j2 dest={{app_conf_file}} owner={{app_user_name}} group={{app_group_name}} mode=0640
     - name: Create application user home
