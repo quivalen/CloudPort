@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: cloudport
   vars_files:
     - ../vars/globals.yml
     - ../vars/secrets.yml
@@ -33,7 +33,7 @@
                   priv=*.*:ALL
                   host=localhost
                   password={{mysql_app_password}}
-                  check_implicit_admin=yes
+                  check_implicit_admin=no
                   login_user=root
                   login_password={{mysql_root_password}}
                   state=present

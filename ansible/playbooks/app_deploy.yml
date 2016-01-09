@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: cloudport
   vars:
   vars_files:
     - ../vars/globals.yml
@@ -10,9 +10,13 @@
     - name: Install bundler
       gem: name=bundler version={{bundler_version}}
     - name: Create application user custom shell rc
-      template: src=../templates/bashrc.j2 dest={{app_user_bashrc}} owner={{app_user_name}} group={{app_group_name}} mode=0644
+      template: src=../templates/bashrc.j2
+                dest={{app_user_bashrc}}
+                owner={{app_user_name}}
+                group={{app_group_name}}
+                mode=0644
     - name: Get application code from Git
-      git:  repo={{app_repo}} dest={{app_path}} version={{app_version}} force=yes
+      git: repo={{app_repo}} dest={{app_path}} version={{app_version}} force=yes
       notify:
         - Bundle install
         - Create database

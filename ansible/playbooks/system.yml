@@ -1,8 +1,5 @@
 ---
-- hosts: all
-  vars_files:
-    - ../vars/globals.yml
-    - ../vars/secrets.yml
+- hosts: cloudport
   sudo: yes
   tasks:
     - name: Update operating system
