@@ -95,9 +95,9 @@ class Build < ActiveRecord::Base
 
   def create_tailored_build
     FileUtils.mkdir(build_path)
-    system("git clone --depth 1 #{self.class.repo_url} #{build_path} &>/dev/null")
+    system("git clone --depth 1 #{self.class.repo_url} #{build_path} >/dev/null")
     FileUtils.chdir(build_path) do
-      self.status = !!system("#{self.class.tailor_command} #{tailor_options} &>tailor.log")
+      self.status = !!system("#{self.class.tailor_command} #{tailor_options} >tailor.log")
     end
 
     !!status
