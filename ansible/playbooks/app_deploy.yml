@@ -15,6 +15,15 @@
                 owner={{app_user_name}}
                 group={{app_group_name}}
                 mode=0644
+    - name: Create application user SSH config directory
+      file:
+        path: "{{app_user_ssh_config_dir}}"
+        state: directory
+        mode: 0755
+    - name: Disable GitHub strict host key checking
+      shell: "echo \"Host github.com\n\tStrictHostKeyChecking no\n\" >{{app_user_ssh_config_file}}"
+      args:
+        creates: "{{app_user_ssh_config_file}}"
     - name: Get application code from Git
       git: repo={{app_repo}} dest={{app_path}} version={{app_version}} force=yes
       notify:

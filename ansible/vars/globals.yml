@@ -11,6 +11,8 @@ app_group_name: "{{app_name}}"
 app_user_uid: 777
 app_user_gid: 777
 app_user_bashrc: "{{app_user_home}}/.bashrc"
+app_user_ssh_config_dir: "{{app_user_home}}/.ssh"
+app_user_ssh_config_file: "{{app_user_ssh_config_dir}}/config"
 app_data_path: "/data"
 app_server_name: puma
 app_server_bind: 127.0.0.1
