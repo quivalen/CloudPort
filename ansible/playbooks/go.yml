@@ -1,0 +1,17 @@
+---
+- hosts: cloudport
+  vars_files:
+    - ../vars/go.yml
+  sudo: yes
+  tasks:
+    - name: Download Golang package
+      get_url: url={{go_package_url}} dest={{go_package_file}}
+    - name: Unpack Golang package
+      unarchive: src={{go_package_file}}
+                 dest={{go_prefix}}
+                 copy=no
+                 creates={{go_root}}
+    - name: Install Golang into GOROOT
+      shell: "mv -f {{go_unpack_dir}} {{go_root}}"
+      args:
+        creates: "{{go_root}}"

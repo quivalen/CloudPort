@@ -1,0 +1,8 @@
+---
+go_version: '1.5.2'
+go_system: 'linux-amd64'
+go_prefix: '/usr/local'
+go_unpack_dir: "{{go_prefix}}/go"
+go_root: "{{go_prefix}}/go{{go_version}}"
+go_package_url: "https://storage.googleapis.com/golang/go{{go_version}}.{{go_system}}.tar.gz"
+go_package_file: "/tmp/go{{go_version}}.{{go_system}}.tar.gz"

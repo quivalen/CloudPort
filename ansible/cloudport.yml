@@ -1,5 +1,6 @@
 ---
 - include: playbooks/system.yml
+- include: playbooks/go.yml
 - include: playbooks/docker.yml
 - include: playbooks/database.yml
 - include: playbooks/app_setup.yml
