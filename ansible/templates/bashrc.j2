@@ -2,11 +2,15 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# NB!
+# Following case/esac block is commented on purpose. Don't worry.
+# We need to source this file inside out non-interactive scripts!
+#
 # If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+#case $- in
+#    *i*) ;;
+#      *) return;;
+#esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -119,4 +123,7 @@ fi
 #
 . {{app_conf_file}}
 
-export PATH="{{gem_path}}/bin:${PATH}"
+export GOROOT="{{go_root}}"
+export GOPATH="{{go_path}}"
+
+export PATH="{{gem_path}}/bin:${GOPATH}/bin:${GOROOT}/bin:${PATH}"

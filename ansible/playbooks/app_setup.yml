@@ -2,9 +2,14 @@
 - hosts: cloudport
   vars_files:
     - ../vars/application.yml
+    - ../vars/go.yml
     - ../vars/secrets.yml
+  vars:
+    go_path: "{{app_user_home}}/go/{{go_version}}"
   sudo: yes
   tasks:
+    - name: Disable hellborn Dash
+      file: src=/bin/bash dest=/bin/sh owner=root group=root mode=0755 state=link force=yes
     - name: Add Brightbox PPA
       apt_repository: repo='ppa:brightbox/ruby-ng' state=present update_cache=yes
     - name: Install Ruby
@@ -35,18 +40,12 @@
             group={{app_group_name}}
             mode=0755
             state=directory
-    - name: Create application data path
-      file: name={{app_data_path}}
-            owner={{app_user_name}}
-            group={{app_group_name}}
-            mode=0755
-            state=directory
-    - name: Create application user log path
-      file: name={{app_log_path}}
-            owner={{app_user_name}}
-            group=adm
-            mode=0755
-            state=directory
+    - name: Create application user custom shell rc
+      template: src=../templates/bashrc.j2
+                dest={{app_user_bashrc}}
+                owner={{app_user_name}}
+                group={{app_group_name}}
+                mode=0644
     - name: Setup MySQL application user
       mysql_user: name={{mysql_app_username}}
                   priv=*.*:ALL
@@ -62,6 +61,24 @@
                 owner={{app_user_name}}
                 group={{app_group_name}}
                 mode=0600
+    - name: Create Go path
+      file: name={{go_path}}
+            owner={{app_user_name}}
+            group={{app_group_name}}
+            mode=0755
+            state=directory
+    - name: Create application data path
+      file: name={{app_data_path}}
+            owner={{app_user_name}}
+            group={{app_group_name}}
+            mode=0755
+            state=directory
+    - name: Create application user log path
+      file: name={{app_log_path}}
+            owner={{app_user_name}}
+            group=adm
+            mode=0755
+            state=directory
     - name: Create application sudoers.d config
       template: src=../templates/sudoers.d.j2
                 dest={{app_sudoers_file}}

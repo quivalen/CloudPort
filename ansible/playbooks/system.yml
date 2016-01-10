@@ -11,8 +11,5 @@
       apt: pkg=nodejs state=latest
     - name: Install Nginx
       apt: pkg=nginx state=latest
-      notify:
-        - Start Nginx
-  handlers:
-    - name: Start Nginx
-      service: name=nginx state=started
+    - name: Ensure Nginx enabled and started
+      service: name=nginx enabled=yes state=started

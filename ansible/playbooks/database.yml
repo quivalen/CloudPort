@@ -10,8 +10,8 @@
         - mariadb-server
         - mariadb-client
         - libmariadbclient-dev
-      notify:
-        - Start MySQL
+    - name: Ensure MySQL enabled and started
+      service: name=mysql enabled=yes state=started
     - name: Install Python interface to MySQL
       apt: pkg=python-mysqldb state=latest
     - name: Setup MySQL root user
@@ -27,6 +27,3 @@
         - "{{ansible_hostname}}"
         - 127.0.0.1
         - ::1
-  handlers:
-    - name: Start MySQL
-      service: name=mysql state=started

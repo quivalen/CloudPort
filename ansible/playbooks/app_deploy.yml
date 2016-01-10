@@ -9,18 +9,14 @@
   tasks:
     - name: Install bundler
       gem: name=bundler version={{bundler_version}}
-    - name: Create application user custom shell rc
-      template: src=../templates/bashrc.j2
-                dest={{app_user_bashrc}}
-                owner={{app_user_name}}
-                group={{app_group_name}}
-                mode=0644
     - name: Get P.T.U. code from Git
       git: repo={{ptu_repo}}
            dest={{ptu_path}}
            version={{ptu_version}}
            depth=1
            force=yes
+      notify:
+        - Install P.T.U. dependencies
     - name: Get application code from Git
       git: repo={{app_repo}}
            dest={{app_path}}
@@ -34,6 +30,10 @@
         - Ensure application PID directory
         - Reload application server
   handlers:
+    - name: Install P.T.U. dependencies
+      shell: ". {{app_user_bashrc}} && script/install"
+      args:
+        chdir: "{{ptu_path}}"
     - name: Bundle install
       shell: "{{bundle}} install --retry=5 --deployment --without '{{bundle_without}}'"
       args:
