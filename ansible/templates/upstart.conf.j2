@@ -33,5 +33,5 @@ script
     --environment {{app_env}} \
     --tag {{app_name}} \
     --pidfile {{app_server_pid_file}} \
-    --redirect-stdout {{app_server_log_file}} --redirect-stdout {{app_server_log_file}}
+    --redirect-stdout {{app_server_out_file}} --redirect-stderr {{app_server_err_file}}
 end script
