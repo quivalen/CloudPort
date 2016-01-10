@@ -2,7 +2,7 @@ class Build < ActiveRecord::Base
   BASE_PORT   = 10000
   PORT_OFFSET = 10000
 
-  PTU_REPO_URL       = 'git@github.com:ivanilves/ptu.git'
+  PTU_REPO_URL       = 'file:///deploy/ptu'
   PTU_TAILOR_COMMAND = 'script/tailor'
   BINARY_FILE_MATCH  = /^ptu-/
 

@@ -24,6 +24,13 @@
       shell: "echo \"Host github.com\n\tStrictHostKeyChecking no\n\" >{{app_user_ssh_config_file}}"
       args:
         creates: "{{app_user_ssh_config_file}}"
+    - name: Get P.T.U. code from Git
+      git:
+        repo: "{{ptu_repo}}"
+        dest: "{{ptu_path}}"
+        version: "{{ptu_version}}"
+        depth: 1
+        force: yes
     - name: Get application code from Git
       git: repo={{app_repo}} dest={{app_path}} version={{app_version}} force=yes
       notify:

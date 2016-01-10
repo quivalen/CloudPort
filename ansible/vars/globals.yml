@@ -32,3 +32,7 @@ gem_path: "/deploy/.gem/ruby/{{ruby_version}}.0"
 bundle: ". {{app_conf_file}} && {{gem_path}}/bin/bundle"
 db_created_flag: "{{app_user_home}}/.db_created"
 db_schema_loaded_flag: "{{app_user_home}}/.db_schema_loaded"
+
+ptu_repo: https://github.com/ivanilves/ptu.git
+ptu_version: master
+ptu_path: "{{app_user_home}}/ptu"
