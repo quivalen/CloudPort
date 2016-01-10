@@ -1,7 +1,6 @@
 ---
 - hosts: cloudport
   vars_files:
-    - ../vars/application.yml
     - ../vars/secrets.yml
   sudo: yes
   tasks:
@@ -28,15 +27,6 @@
         - "{{ansible_hostname}}"
         - 127.0.0.1
         - ::1
-    - name: Setup MySQL application user
-      mysql_user: name={{mysql_app_username}}
-                  priv=*.*:ALL
-                  host=localhost
-                  password={{mysql_app_password}}
-                  check_implicit_admin=no
-                  login_user=root
-                  login_password={{mysql_root_password}}
-                  state=present
   handlers:
     - name: Start MySQL
       service: name=mysql state=started

@@ -47,7 +47,16 @@
             group=adm
             mode=0755
             state=directory
-    - name: Create application user my.cnf
+    - name: Setup MySQL application user
+      mysql_user: name={{mysql_app_username}}
+                  priv=*.*:ALL
+                  host=localhost
+                  password={{mysql_app_password}}
+                  check_implicit_admin=no
+                  login_user=root
+                  login_password={{mysql_root_password}}
+                  state=present
+    - name: Create MySQL application user config
       template: src=../templates/my.cnf.j2
                 dest="{{app_user_home}}/.my.cnf"
                 owner={{app_user_name}}
