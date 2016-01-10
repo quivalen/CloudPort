@@ -2,7 +2,7 @@
 - hosts: cloudport
   vars:
   vars_files:
-    - ../vars/globals.yml
+    - ../vars/application.yml
     - ../vars/secrets.yml
   sudo: yes
   sudo_user: "{{app_user_name}}"
