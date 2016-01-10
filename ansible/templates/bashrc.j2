@@ -113,13 +113,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
-#
-# Fancy pants shell prompt
-#
-PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
 
 #
-# Our custom (templatable) code
+# Our application-specific (templatable) code
 #
 . {{app_conf_file}}
 
