@@ -18,16 +18,20 @@ pre-start script
 end script
 
 pre-stop script
-  kill $(cat {{app_server_pid_file}})
+  [ -f {{app_server_pid_file}} ] && kill $(cat {{app_server_pid_file}})
 end script
 
 script
   trap 'kill -USR2 $(cat {{app_server_pid_file}})' HUP
 
-  . {{app_conf_file}}
-
   export HOME={{app_user_home}}
-  export PATH="{{gem_path}}/bin:${PATH}"
 
-  bundle exec {{app_server_name}} --bind tcp://{{app_server_bind}}:{{app_server_port}} --environment {{app_env}} --tag {{app_name}} --pidfile {{app_server_pid_file}}
+  . {{app_user_bashrc}}
+
+  bundle exec {{app_server_name}} \
+    --bind tcp://{{app_server_bind}}:{{app_server_port}} \
+    --environment {{app_env}} \
+    --tag {{app_name}} \
+    --pidfile {{app_server_pid_file}} \
+    --redirect-stdout {{app_server_log_file}} --redirect-stdout {{app_server_log_file}}
 end script

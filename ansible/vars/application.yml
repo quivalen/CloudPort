@@ -20,6 +20,7 @@ app_server_port: 8000
 app_upstart_file: "/etc/init/{{app_name}}.conf"
 app_server_pid_file: "/var/run/{{app_name}}/{{app_server_name}}.pid"
 app_log_path: "/var/log/{{app_name}}"
+app_server_log_file: "{{app_log_path}}/{{app_server_name}}.log"
 app_reload_script: "{{app_path}}/script/tools/reload-service"
 app_pid_dir_script: "{{app_path}}/script/tools/ensure-pid-dir"
 
