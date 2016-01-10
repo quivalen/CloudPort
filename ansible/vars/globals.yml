@@ -1,38 +1,38 @@
 ---
-app_name: cloudport
-app_repo: https://github.com/ivanilves/CloudPort.git
-app_version: master
-app_env: production
-app_user_home: /deploy
-app_path: "{{app_user_home}}/{{app_name}}"
+app_name: 'cloudport'
+app_repo: 'https://github.com/ivanilves/CloudPort.git'
+app_version: 'master'
+app_env: 'production'
 app_conf_file: "/etc/default/{{app_name}}"
+app_sudoers_file: "/etc/sudoers.d/{{app_name}}"
+app_user_home: '/deploy'
+app_path: "{{app_user_home}}/{{app_name}}"
 app_user_name: "{{app_name}}"
 app_group_name: "{{app_name}}"
 app_user_uid: 777
 app_user_gid: 777
 app_user_bashrc: "{{app_user_home}}/.bashrc"
-app_user_ssh_config_dir: "{{app_user_home}}/.ssh"
-app_user_ssh_config_file: "{{app_user_ssh_config_dir}}/config"
-app_data_path: "/data"
-app_server_name: puma
-app_server_bind: 127.0.0.1
+app_data_path: '/data'
+
+app_server_name: 'puma'
+app_server_bind: '127.0.0.1'
 app_server_port: 8000
+app_upstart_file: "/etc/init/{{app_name}}.conf"
 app_server_pid_file: "/var/run/{{app_name}}/{{app_server_name}}.pid"
 app_log_path: "/var/log/{{app_name}}"
-app_upstart_file: "/etc/init/{{app_name}}.conf"
-mysql_app_username: "{{app_name}}"
-app_sudoers_file: "/etc/sudoers.d/{{app_name}}"
 app_reload_script: "{{app_path}}/script/tools/reload-service"
 app_pid_dir_script: "{{app_path}}/script/tools/ensure-pid-dir"
 
-ruby_version: 2.2
-bundler_version: 1.11.2
-bundle_without: "development test"
-gem_path: "/deploy/.gem/ruby/{{ruby_version}}.0"
+ruby_version: '2.2'
+bundler_version: '1.11.2'
+bundle_without: 'development test'
+gem_path: "{{app_user_home}}/.gem/ruby/{{ruby_version}}.0"
 bundle: ". {{app_conf_file}} && {{gem_path}}/bin/bundle"
+
+mysql_app_username: "{{app_name}}"
 db_created_flag: "{{app_user_home}}/.db_created"
 db_schema_loaded_flag: "{{app_user_home}}/.db_schema_loaded"
 
-ptu_repo: https://github.com/ivanilves/ptu.git
-ptu_version: master
+ptu_repo: 'https://github.com/ivanilves/ptu.git'
+ptu_version: 'master'
 ptu_path: "{{app_user_home}}/ptu"

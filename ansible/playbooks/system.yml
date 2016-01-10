@@ -3,10 +3,11 @@
   sudo: yes
   tasks:
     - name: Update operating system
-      apt: upgrade=dist update_cache=yes dpkg_options='force-confold,force-confdef'
+      apt: upgrade=dist update_cache=yes
+           dpkg_options='force-confold,force-confdef'
     - name: Install Git
       apt: pkg=git state=latest
-    - name: Install node.js
+    - name: Install Node.js
       apt: pkg=nodejs state=latest
     - name: Install Nginx
       apt: pkg=nginx state=latest
