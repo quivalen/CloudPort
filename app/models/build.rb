@@ -3,7 +3,7 @@ class Build < ActiveRecord::Base
   PORT_OFFSET = 10000
 
   PTU_REPO_URL       = 'file:///deploy/ptu'
-  PTU_TAILOR_COMMAND = 'script/tailor'
+  PTU_TAILOR_COMMAND = 'SKIP_CI=yes script/tailor'
   BINARY_FILE_MATCH  = /^ptu-/
 
   DOCKER_IMAGE = 'rastasheep/ubuntu-sshd:14.04'
