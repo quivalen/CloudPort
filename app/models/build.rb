@@ -131,18 +131,11 @@ class Build < ActiveRecord::Base
 
     container.start
 
-    container.exec(
-      ['passwd', 'root'],
-      stdin: StringIO.new("#{ssh_password}\n#{ssh_password}")
-    )
+    container.exec(['passwd', 'root'], stdin: StringIO.new("#{ssh_password}\n#{ssh_password}"))
 
-    container.exec(
-      ['echo', 'GatewayPorts yes', '>>', '/etc/ssh/sshd_config']
-    )
+    container.exec(['bash', '-c', 'echo GatewayPorts yes >>/etc/ssh/sshd_config'])
 
-    container.exec(
-      ['restart', 'ssh']
-    )
+    container.exec(['restart', 'ssh'])
 
     self.docker_container_id = container.id
   end
