@@ -38,7 +38,7 @@ class Build < ActiveRecord::Base
 
   def initialize(
     name:         Rails.application.class.to_s.split("::").first.downcase,
-    ssh_server:   'echo.cloudport.net',
+    ssh_server:   "172.16.172.16",
     ssh_username: 'root',
     ssh_password: self.class.random_password,
     target_host:  '127.0.0.1:22',
@@ -134,6 +134,14 @@ class Build < ActiveRecord::Base
     container.exec(
       ['passwd', 'root'],
       stdin: StringIO.new("#{ssh_password}\n#{ssh_password}")
+    )
+
+    container.exec(
+      ['echo', 'GatewayPorts yes', '>>', '/etc/ssh/sshd_config']
+    )
+
+    container.exec(
+      ['restart', 'ssh']
     )
 
     self.docker_container_id = container.id
