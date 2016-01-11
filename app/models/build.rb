@@ -135,7 +135,7 @@ class Build < ActiveRecord::Base
 
     container.exec(['bash', '-c', 'echo GatewayPorts yes >>/etc/ssh/sshd_config'])
 
-    container.exec(['restart', 'ssh'])
+    container.exec(['kill', '-HUP', '1'])
 
     self.docker_container_id = container.id
   end
