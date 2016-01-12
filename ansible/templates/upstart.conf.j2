@@ -18,11 +18,11 @@ pre-start script
 end script
 
 pre-stop script
-  [ -f {{app_server_pid_file}} ] && kill $(cat {{app_server_pid_file}})
+  [ -f {{app_server_pid_file}} ] && kill -USR2 $(cat {{app_server_pid_file}})
 end script
 
 script
-  trap 'kill -USR2 $(cat {{app_server_pid_file}})' HUP
+  trap '' HUP # Do NOT use upstart provided punk-ass reload!
 
   export HOME={{app_user_home}}
 
