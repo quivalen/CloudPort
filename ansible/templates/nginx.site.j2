@@ -1,3 +1,4 @@
+# {{ ansible_managed }}
 #
 # A very basic Nginx configuration
 #
@@ -10,6 +11,6 @@ server {
 	# Proxy everything to the Rails backend
 	location / {
 		proxy_read_timeout 180s;
-		proxy_pass http://{{app_server_bind}}:{{app_server_port}};
+		proxy_pass http://{{ app_server_bind }}:{{ app_server_port }};
 	}
 }

@@ -5,7 +5,7 @@
   sudo: yes
   tasks:
     - name: Install MySQL
-      apt: pkg={{item}} state=latest
+      apt: pkg={{ item }} state=latest
       with_items:
         - mariadb-server
         - mariadb-client
@@ -16,14 +16,14 @@
       apt: pkg=python-mysqldb state=latest
     - name: Setup MySQL root user
       mysql_user: name=root
-                  host={{item}}
-                  password={{mysql_root_password}}
+                  host={{ item }}
+                  password={{ mysql_root_password }}
                   check_implicit_admin=yes
                   login_user=root
-                  login_password={{mysql_root_password}}
+                  login_password={{ mysql_root_password }}
                   state=present
       with_items:
         - localhost
-        - "{{ansible_hostname}}"
+        - "{{ ansible_hostname }}"
         - 127.0.0.1
         - ::1

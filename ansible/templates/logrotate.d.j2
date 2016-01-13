@@ -1,4 +1,6 @@
-{{app_log_path}}/*.log {
+# {{ ansible_managed }}
+
+{{ app_log_path }}/*.log {
 	daily
 	missingok
 	rotate 14
