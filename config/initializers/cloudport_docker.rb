@@ -1,3 +1,3 @@
 Docker::Image.create('fromImage' => Build::DOCKER_IMAGE)
 
-Docker::Container.all.each { |c| c.start }
+Build.all.each { |b| b.docker_container.start }
