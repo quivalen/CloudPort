@@ -28,7 +28,14 @@
             shell=/bin/bash
             comment='CloudPort application user'
             state=present
-    - name: Create application config
+    - name: Create application host file
+      template: src=../templates/app_host.j2
+                dest={{ app_host_file }}
+                owner=root
+                group={{ app_group_name }}
+                mode=0644
+                force=no
+    - name: Create application config file
       template: src=../templates/config.j2
                 dest={{ app_conf_file }}
                 owner={{ app_user_name }}
@@ -40,7 +47,7 @@
             group={{ app_group_name }}
             mode=0755
             state=directory
-    - name: Create application user Bash aliases
+    - name: Create application user Bash aliases file
       template: src=../templates/bash_aliases.j2
                 dest={{ app_user_bash_aliases }}
                 owner={{ app_user_name }}
@@ -55,7 +62,7 @@
                   login_user=root
                   login_password={{ mysql_root_password }}
                   state=present
-    - name: Create MySQL application user config
+    - name: Create MySQL application user config file
       template: src=../templates/my.cnf.j2
                 dest="{{ app_user_home }}/.my.cnf"
                 owner={{ app_user_name }}
@@ -79,14 +86,14 @@
             group=adm
             mode=0755
             state=directory
-    - name: Create application sudoers.d config
+    - name: Create application sudoers.d config file
       template: src=../templates/sudoers.d.j2
                 dest={{ app_sudoers_file }}
                 owner=root
                 group=root
                 mode=0440
                 validate="visudo -c -f %s"
-    - name: Create application logrotate.d config
+    - name: Create application logrotate.d config file
       template: src=../templates/logrotate.d.j2
                 dest="/etc/logrotate.d/{{ app_name }}"
                 owner=root
