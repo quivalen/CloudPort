@@ -28,6 +28,10 @@ class Build < ActiveRecord::Base
     @@tailor_command ||= ENV['PTU_TAILOR_COMMAND'] || PTU_TAILOR_COMMAND
   end
 
+  def self.ssh_server
+    ENV.fetch('CLOUDPORT_HOSTNAME', '172.16.172.16')
+  end
+
   def self.random_password
     SecureRandom.hex(20)
   end
@@ -38,7 +42,7 @@ class Build < ActiveRecord::Base
 
   def initialize(
     name:         Rails.application.class.to_s.split("::").first.downcase,
-    ssh_server:   "172.16.172.16",
+    ssh_server:   self.class.ssh_server,
     ssh_username: 'root',
     ssh_password: self.class.random_password,
     target_host:  '127.0.0.1:22',
