@@ -9,6 +9,8 @@
       apt: pkg=git state=latest
     - name: Install Node.js
       apt: pkg=nodejs state=latest
+    - name: Install build essentials
+      apt: pkg=build-essential state=latest
     - name: Install Nginx
       apt: pkg=nginx state=latest
     - name: Ensure Nginx enabled and started
