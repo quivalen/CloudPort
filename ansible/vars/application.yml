@@ -1,7 +1,7 @@
 ---
 app_name: 'cloudport'
 app_repo: 'https://github.com/ivanilves/CloudPort.git'
-app_version: 'master'
+app_version: 'develop'
 app_env: 'production'
 default_hostname: '172.16.172.16'
 app_host_file: "/etc/{{ app_name }}_hostname"
