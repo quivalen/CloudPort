@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# perform full provisioning || deploy code
+#
+if [ $# -ne 1 ]; then
+  echo "Usage: ${0} DEPLOY_ENV"
+  exit 1
+fi
+
+DEPLOY_ENV=${1}
+HOSTS_FILE=/etc/ansible/${DEPLOY_ENV}
+
+if [ "${DEPLOY_ENV}" == "production" ]; then
+  APP_VERSION="master"
+else
+  APP_VERSION="develop"
+fi
+
+if [ "$(basename ${0})" == "deploy" ]; then
+  PLAYBOOK_FILE="$(dirname $0)/../ansible/playbooks/app_deploy.yml"
+else
+  PLAYBOOK_FILE="$(dirname $0)/../ansible/main.yml"
+fi
+
+ansible-playbook -i ${HOSTS_FILE} -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}

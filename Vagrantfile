@@ -4,7 +4,7 @@
 PLAYBOOK_YML = lambda do
   return "ansible/playbooks/#{ENV['PLAYBOOK'].strip}.yml" if ENV['PLAYBOOK']
 
-  'ansible/cloudport.yml'
+  'ansible/main.yml'
 end.call
 
 SECRETS_FILE = File.expand_path(File.dirname(__FILE__) + '/ansible/vars/secrets.yml')
