@@ -1,5 +1,7 @@
 class DryBuildsForCommonSense < ActiveRecord::Migration
   def change
+    execute "UPDATE `builds` SET `build_id` = SUBSTRING(`build_id`, 1, 6)"
+
     execute "ALTER TABLE `builds` MODIFY COLUMN `build_id`             VARCHAR(6) NOT NULL"
     execute "ALTER TABLE `builds` MODIFY COLUMN `docker_container_id`  VARCHAR(64) NOT NULL"
 
