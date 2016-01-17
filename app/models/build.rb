@@ -1,14 +1,5 @@
 class Build < ActiveRecord::Base
-  BASE_PORT   = 10000
-  PORT_OFFSET = 10000
-
-  PTU_REPO_URL       = 'file:///deploy/ptu'
-  PTU_TAILOR_COMMAND = 'SKIP_CI=yes script/tailor'
-  BINARY_FILE_MATCH  = /^ptu-/
-
-  DOCKER_IMAGE = 'rastasheep/ubuntu-sshd:14.04'
-
-  before_create { |b| b.build_id = SecureRandom.hex(7) }
+  before_create { |b| b.build_id = SecureRandom.hex(3) }
 
   before_create :create_tailored_build
   after_destroy :delete_tailored_build
@@ -20,34 +11,26 @@ class Build < ActiveRecord::Base
     @@build_root ||= CloudPort::Application.config.build_root
   end
 
-  def self.repo_url
-    @@repo_url ||= ENV['PTU_REPO_URL'] || PTU_REPO_URL
+  def self.ptu_repo_url
+    @@ptu_repo_url ||= CloudPort::Application.config.ptu_repo_url
   end
 
-  def self.tailor_command
-    @@tailor_command ||= ENV['PTU_TAILOR_COMMAND'] || PTU_TAILOR_COMMAND
+  def self.ptu_tailor_command
+    @@ptu_tailor_command ||= CloudPort::Application.config.ptu_tailor_command
   end
 
-  def self.ssh_server
-    ENV.fetch('CLOUDPORT_HOSTNAME', '172.16.172.16')
-  end
-
-  def self.random_password
-    SecureRandom.hex(20)
-  end
-
-  def self.random_exposed_port
-    BASE_PORT + rand(PORT_OFFSET)
+  def self.docker_image
+    @@docker_image ||= CloudPort::Application.config.docker_image
   end
 
   def initialize(
-    name:         Rails.application.class.to_s.split("::").first.downcase,
-    ssh_server:   self.class.ssh_server,
-    ssh_username: 'root',
-    ssh_password: self.class.random_password,
-    target_host:  '127.0.0.1:22',
-    exposed_bind: '0.0.0.0',
-    exposed_port: self.class.random_exposed_port
+    name:         Build::Defaults.name,
+    ssh_server:   Build::Defaults.ssh_server,
+    ssh_username: Build::Defaults.ssh_username,
+    ssh_password: Build::Defaults.ssh_password,
+    target_host:  Build::Defaults.target_host,
+    exposed_bind: Build::Defaults.exposed_bind,
+    exposed_port: Build::Defaults.exposed_port
   )
     super
 
@@ -58,18 +41,16 @@ class Build < ActiveRecord::Base
     @target_host  = target_host
     @exposed_bind = exposed_bind
     @exposed_port = exposed_port
-  end
 
-  def exposed_host
-    "#{exposed_bind}:#{exposed_port.to_s}"
-  end
-
-  def ssh_server
-    "#{@ssh_server}:#{ssh_port.to_s}"
+    Build::Defaults.reset!
   end
 
   def ssh_port
-    @ssh_port ||= exposed_port + PORT_OFFSET
+    @ssh_port ||= ssh_server.sub(%r{.*:},'').to_i
+  end
+
+  def exposed_host
+    @exposed_host ||= "#{exposed_bind}:#{exposed_port.to_s}"
   end
 
   def build_path
@@ -84,7 +65,7 @@ class Build < ActiveRecord::Base
     unless @binary_files
       @binary_files = []
       Dir.new(binary_path).each do |f|
-        @binary_files << f if f.match(BINARY_FILE_MATCH)
+        @binary_files << f if f.match(%r{^ptu})
       end
     end
 
@@ -99,15 +80,15 @@ class Build < ActiveRecord::Base
 
   def create_tailored_build
     FileUtils.mkdir(build_path)
-    system("git clone --depth 1 #{self.class.repo_url} #{build_path}")
+    system("git clone --depth 1 #{self.class.ptu_repo_url} #{build_path}")
     FileUtils.chdir(build_path) do
-      self.status = !!system("#{self.class.tailor_command} #{tailor_options} >tailor.log 2>tailor.err")
+      self.status = !!system("SKIP_CI=yes #{self.class.ptu_tailor_command} #{ptu_tailor_options} >tailor.log 2>tailor.err")
     end
 
-    !!status
+    !!self.status
   end
 
-  def tailor_options
+  def ptu_tailor_options
     "-n #{name} -s #{ssh_server} -u #{ssh_username} -p #{ssh_password} -t #{target_host} -b #{exposed_bind} -e #{exposed_port}"
   end
 
@@ -122,7 +103,7 @@ class Build < ActiveRecord::Base
     host_exposed_port  = exposed_port.to_s
 
     container = Docker::Container.create(
-      'Image' => DOCKER_IMAGE,
+      'Image'        => self.class.docker_image,
       'ExposedPorts' => {
         guest_ssh_port => {}, guest_exposed_port => {},
       },
@@ -135,11 +116,18 @@ class Build < ActiveRecord::Base
 
     container.start
 
-    container.exec(['passwd', 'root'], stdin: StringIO.new("#{ssh_password}\n#{ssh_password}"))
+    container.exec(
+      ['passwd', 'root'],
+      stdin: StringIO.new("#{ssh_password}\n#{ssh_password}")
+    )
 
-    container.exec(['bash', '-c', 'echo GatewayPorts yes >>/etc/ssh/sshd_config'])
+    container.exec(
+      ['bash', '-c', 'echo GatewayPorts yes >>/etc/ssh/sshd_config']
+    )
 
-    container.exec(['kill', '-HUP', '1'])
+    container.exec(
+      ['kill', '-HUP', '1']
+    )
 
     self.docker_container_id = container.id
   end

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#
+# Deploy code! (does not perform full provisioning though)
+#
+ansible-playbook -i /etc/ansible/${1} "$(dirname $0)/../ansible/playbooks/app_deploy.yml"

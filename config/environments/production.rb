@@ -79,4 +79,7 @@ Rails.application.configure do
 
   # Where do we place ptu builds?
   config.build_root = '/data/builds'
+
+  # p.t.u repo URL
+  config.ptu_repo_url = 'file:///deploy/ptu'
 end

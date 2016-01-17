@@ -41,4 +41,7 @@ Rails.application.configure do
 
   # Where do we place ptu builds?
   config.build_root = 'tmp/cloudport/builds'
+
+  # p.t.u repo URL
+  config.ptu_repo_url =  ENV.fetch('PTU_REPO_URL', 'https://github.com/ivanilves/ptu.git')
 end

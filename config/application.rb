@@ -22,5 +22,20 @@ module CloudPort
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # Base SSH port to start assignment from
+    config.ssh_base_port = 10000
+
+    # An offset between SSH server and exposed ports
+    config.ssh_port_offset = config.ssh_base_port
+
+    # Docker image used to create containers from
+    config.docker_image = 'rastasheep/ubuntu-sshd:14.04'
+
+    # A command used to create tailored p.t.u. builds
+    config.ptu_tailor_command = ENV.fetch('PTU_TAILOR_COMMAND', 'script/tailor')
+
+    # Hostname to be tailored into p.t.u. builds
+    config.hostname = ENV.fetch('CLOUDPORT_HOSTNAME', '127.0.0.1')
   end
 end
