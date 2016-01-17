@@ -54,11 +54,10 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
-  # ptu builds
+  # p.t.u. builds
   root 'builds#index'
-  post 'builds'             => 'builds#new'
-  post 'builds/create'      => 'builds#create'
-  get 'builds/show/:id'     => 'builds#show'
-  get 'builds/download/:id' => 'builds#download'
-
+  post 'build'             => 'builds#new'
+  post 'build/create'      => 'builds#create'
+  get 'build/:id'          => 'builds#show'
+  get 'build/download/:id' => 'builds#download'
 end

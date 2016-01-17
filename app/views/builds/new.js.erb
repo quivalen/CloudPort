@@ -1,11 +1,14 @@
 var jqxhr = $.post(
-  '/builds/create',
-  { target_host: '<%= @target_host %>' }
+  '/build/create',
+  {
+    target_address: '<%= @target_address %>',
+    target_port: '<%= @target_port %>'
+  }
 );
 
 jqxhr.done(
   function(buildID) {
-    window.location = '/builds/show/' + buildID
+    window.location = '/build/' + buildID
   }
 );
 

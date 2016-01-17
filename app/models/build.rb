@@ -7,6 +7,10 @@ class Build < ActiveRecord::Base
   before_create :create_docker_container
   after_destroy :delete_docker_container
 
+  def self.ssh_port_offset
+    @@ssh_port_offset ||= CloudPort::Application.config.ssh_port_offset
+  end
+
   def self.build_root
     @@build_root ||= CloudPort::Application.config.build_root
   end
@@ -19,34 +23,27 @@ class Build < ActiveRecord::Base
     @@ptu_tailor_command ||= CloudPort::Application.config.ptu_tailor_command
   end
 
-  def self.docker_image
-    @@docker_image ||= CloudPort::Application.config.docker_image
-  end
-
   def initialize(
-    name:         Build::Defaults.name,
-    ssh_server:   Build::Defaults.ssh_server,
-    ssh_username: Build::Defaults.ssh_username,
-    ssh_password: Build::Defaults.ssh_password,
-    target_host:  Build::Defaults.target_host,
-    exposed_bind: Build::Defaults.exposed_bind,
-    exposed_port: Build::Defaults.exposed_port
+    name:               Build::Defaults.name,
+    ssh_server_address: Build::Defaults.ssh_server_address,
+    ssh_username:       Build::Defaults.ssh_username,
+    ssh_password:       Build::Defaults.ssh_password,
+    target_address:     Build::Defaults.target_address,
+    target_port:        Build::Defaults.target_port,
+    exposed_bind:       Build::Defaults.exposed_bind,
+    exposed_port:       Build::Defaults.exposed_port
   )
     super
 
-    @name         = name
-    @ssh_server   = ssh_server
-    @ssh_username = ssh_username
-    @ssh_password = ssh_password
-    @target_host  = target_host
-    @exposed_bind = exposed_bind
-    @exposed_port = exposed_port
-
-    Build::Defaults.reset!
+    self.ssh_server_port = exposed_port + self.class.ssh_port_offset
   end
 
-  def ssh_port
-    @ssh_port ||= ssh_server.sub(%r{.*:},'').to_i
+  def ssh_server
+    @ssh_server ||= "#{ssh_server_address}:#{ssh_server_port.to_s}"
+  end
+
+  def target_host
+    @target_host ||= "#{target_address}:#{target_port.to_s}"
   end
 
   def exposed_host
@@ -98,12 +95,12 @@ class Build < ActiveRecord::Base
 
   def create_docker_container
     guest_ssh_port     = '22/tcp'
-    host_ssh_port      = ssh_port.to_s
+    host_ssh_port      = ssh_server_port.to_s
     guest_exposed_port = "#{exposed_port.to_s}/tcp"
     host_exposed_port  = exposed_port.to_s
 
     container = Docker::Container.create(
-      'Image'        => self.class.docker_image,
+      'Image'        => CloudPort::Application.config.docker_image,
       'ExposedPorts' => {
         guest_ssh_port => {}, guest_exposed_port => {},
       },
