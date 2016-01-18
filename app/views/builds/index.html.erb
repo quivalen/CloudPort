@@ -4,6 +4,10 @@
   <%= text_field_tag(:target_address, 'localhost') %>
   <%= number_field_tag(:target_port, 22, min: 1, max: 65535) %>
   <%= submit_tag("Go!") %>
+  <div class="xcompile">
+  <%= select_tag(:operating_system, options_for_select(@operating_systems, @default_operating_system)) %>
+  <%= select_tag(:cpu_architecture, options_for_select(@cpu_architectures, @default_cpu_architecture)) %>
+  </div>
 <% end %>
 <p class="hint">Use this form to generate your own personalized tunnel application</p>
 </div>

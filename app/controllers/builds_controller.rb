@@ -1,14 +1,26 @@
 class BuildsController < ApplicationController
 
+  def index
+    @operating_systems        = hash_to_options_for_select(Build.operating_systems)
+    @default_operating_system = Build::Defaults.operating_system
+
+    @cpu_architectures        = hash_to_options_for_select(Build.cpu_architectures.each)
+    @default_cpu_architecture = Build::Defaults.cpu_architecture
+  end
+
   def new
-    @target_address = params[:target_address]
-    @target_port    = params[:target_port]
+    @target_address   = params[:target_address]
+    @target_port      = params[:target_port]
+    @operating_system = params[:operating_system]
+    @cpu_architecture = params[:cpu_architecture]
   end
 
   def create
     @build = Build.new(
-      target_address: params[:target_address],
-      target_port:    params[:target_port],
+      target_address:   params[:target_address],
+      target_port:      params[:target_port],
+      operating_system: params[:operating_system],
+      cpu_architecture: params[:cpu_architecture],
     )
 
     if @build.save
@@ -35,6 +47,14 @@ class BuildsController < ApplicationController
       filename: file_name,
       type: 'application/octet-stream'
     )
+  end
+
+  private
+
+  def hash_to_options_for_select(hash)
+    options = []
+    hash.each { |id, name| options << [name, id.to_s] }
+    options
   end
 
 end

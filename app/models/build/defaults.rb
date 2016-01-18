@@ -35,4 +35,12 @@ class Build::Defaults
     base + step
   end
 
+  def self.operating_system
+    :windows
+  end
+
+  def self.cpu_architecture
+    :amd64
+  end
+
 end

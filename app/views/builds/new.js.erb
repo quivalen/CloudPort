@@ -2,7 +2,9 @@ var jqxhr = $.post(
   '/build/create',
   {
     target_address: '<%= @target_address %>',
-    target_port: '<%= @target_port %>'
+    target_port: '<%= @target_port %>',
+    operating_system: '<%= @operating_system %>',
+    cpu_architecture: '<%= @cpu_architecture %>',
   }
 );
 

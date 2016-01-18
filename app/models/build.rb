@@ -23,6 +23,18 @@ class Build < ActiveRecord::Base
     @@ptu_tailor_command ||= CloudPort::Application.config.ptu_tailor_command
   end
 
+  def self.operating_systems
+    @@operating_systems ||= {
+      linux:   'GNU/Linux',
+      darwin:  'MacOS X',
+      windows: 'Windows',
+    }
+  end
+
+  def self.cpu_architectures
+    @@cpu_architectures ||= { 'amd64' => '64-bit', '386' => '32-bit' }
+  end
+
   def initialize(
     name:               Build::Defaults.name,
     ssh_server_address: Build::Defaults.ssh_server_address,
@@ -31,7 +43,9 @@ class Build < ActiveRecord::Base
     target_address:     Build::Defaults.target_address,
     target_port:        Build::Defaults.target_port,
     exposed_bind:       Build::Defaults.exposed_bind,
-    exposed_port:       Build::Defaults.exposed_port
+    exposed_port:       Build::Defaults.exposed_port,
+    operating_system:   Build::Defaults.operating_system,
+    cpu_architecture:   Build::Defaults.cpu_architecture
   )
     super
 
@@ -79,10 +93,14 @@ class Build < ActiveRecord::Base
     FileUtils.mkdir(build_path)
     system("git clone --depth 1 #{self.class.ptu_repo_url} #{build_path}")
     FileUtils.chdir(build_path) do
-      self.status = !!system("SKIP_CI=yes #{self.class.ptu_tailor_command} #{ptu_tailor_options} >tailor.log 2>tailor.err")
+      self.status = !!system("#{ptu_tailor_environment} #{self.class.ptu_tailor_command} #{ptu_tailor_options}")
     end
 
     !!self.status
+  end
+
+  def ptu_tailor_environment
+    "SKIP_CI=yes BUILD_ID=#{build_id} OPERATING_SYSTEMS=#{operating_system} CPU_ARCHITECTURES=#{cpu_architecture}"
   end
 
   def ptu_tailor_options
