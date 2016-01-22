@@ -4,35 +4,60 @@
 
 $main-color: #3a90c9;
 $main-bg-color: white;
+$heading-color: #c5405b;
+$info-bg-color: #fffff0;
 $field-bg-color: #d6e5f4;
-$field-focus-color: #ffffbb;
+$field-focus-bg-color: #ffffbb;
 $button-hover-bg-color: #eeffff;
 $link-color: black;
 $link-hover-color: orange;
 
 $fonts: monospace, helvetica, sans-serif;
+$heading-fonts: impact, monospace;
 $font-size-normal: 120%;
 $font-size-big: 140%;
+$font-size-heading: 480%;
 
-$big-border: 4px solid;
 $small-border: 2px solid;
+$big-border: 4px solid;
+$huge-border: 6px solid;
 
-$big-radius: 8px;
 $small-radius: 4px;
+$big-radius: 8px;
+$huge-radius: 48px;
 
 body {
   font: $font-size-normal $fonts;
   color: $main-color;
-  background: white;
+  background-color: $main-bg-color;
+  text-align: center;
+}
+
+h1[class="heading"] {
+  color: $heading-color;
+  font: $font-size-heading $heading-fonts;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+h2[class="slogan"] {
+  background-color: $info-bg-color;
+  text-transform: uppercase;
+  border-top: $small-border;
+  border-bottom: $small-border;
+  margin-bottom: 2%;
 }
 
 div[class="viewport"] {
   width: 850px;
-  height: 200px;
+  height: 250px;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15%;
+}
+
+form[class="build"] {
+  padding-top: 30px;
 }
 
 label[for="expose"] {
@@ -74,7 +99,7 @@ input[name="target_port"] {
 }
 
 input[type="text"]:focus, input[type="number"]:focus {
-  background-color: $field-focus-color;
+  background-color: $field-focus-bg-color;
 }
 
 input[type="submit"]:hover {
@@ -109,6 +134,12 @@ select[name="cpu_architecture"] {
   margin-right: 140px;
 }
 
+b[class="exposed-as"] {
+  color: $main-bg-color;
+  background-color: $main-color;
+  font-size: $font-size-big;
+}
+
 p[class="hint"] {
   font-style: italic;
   text-align: center;
@@ -120,19 +151,42 @@ img {
   margin-right: auto;
 }
 
-ul {
-  text-align: center;
-  list-style-type: none;
-}
-
 a {
   text-decoration: none;
 }
 
-a:link {
+a:link, a:visited {
   color: $link-color;
 }
 
 a:hover {
   color: $link-hover-color;
+}
+
+img[class="download"] {
+  border: $huge-border;
+  border-radius: $huge-radius;
+  border-color: $main-bg-color;
+}
+
+img:hover[class="download"] {
+  border: $huge-border;
+  border-radius: $huge-radius;
+  border-color: $link-hover-color;
+}
+
+div[class="bottom-container"] {
+  width: 100%;
+  background-color: $info-bg-color;
+  border-top: $small-border;
+  border-bottom: $small-border;
+  margin-top: 5%;
+}
+
+a:link[class="bottom"], a:visited[class="bottom"] {
+  color: $main-color;
+}
+
+a:hover[class="bottom"] {
+  text-decoration: underline;
 }

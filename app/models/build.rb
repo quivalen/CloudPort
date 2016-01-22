@@ -61,7 +61,7 @@ class Build < ActiveRecord::Base
   end
 
   def exposed_host
-    @exposed_host ||= "#{exposed_bind}:#{exposed_port.to_s}"
+    @exposed_host ||= "#{ssh_server_address}:#{exposed_port.to_s}"
   end
 
   def build_path
@@ -72,19 +72,34 @@ class Build < ActiveRecord::Base
     @binary_path ||= "#{build_path}/bin"
   end
 
-  def binary_files
-    unless @binary_files
-      @binary_files = []
-      Dir.new(binary_path).each do |f|
-        @binary_files << f if f.match(%r{^ptu})
-      end
-    end
+  def binary_extension
+    return '.exe' if windows?
 
-    @binary_files
+    ''
+  end
+
+  def binary_file_name
+    @binary_file ||= "ptu-#{operating_system}-#{cpu_architecture}-#{build_id}#{binary_extension}"
   end
 
   def docker_container
     @docker_container ||= Docker::Container.get(docker_container_id)
+  end
+
+  def operating_system
+    super.to_sym
+  end
+
+  def linux?
+    operating_system == :linux
+  end
+
+  def darwin?
+    operating_system == :darwin
+  end
+
+  def windows?
+    operating_system == :windows
   end
 
   private

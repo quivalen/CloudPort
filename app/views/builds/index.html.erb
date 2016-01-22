@@ -1,6 +1,6 @@
 <div class="viewport">
-<%= form_tag('/build', remote: true) do %>
-  <%= label_tag(:expose, 'Expose:') %>
+<%= form_tag("/build", remote: true, class: "build") do %>
+  <%= label_tag(:expose, "Expose:") %>
   <%= text_field_tag(:target_address, 'localhost') %>
   <%= number_field_tag(:target_port, 22, min: 1, max: 65535) %>
   <%= submit_tag("Go!") %>

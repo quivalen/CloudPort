@@ -1,14 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= @title || 'CloudPort' %></title>
+  <title><%= "CloudPort [#{@site_section || '*'}]" %></title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
+<a class="heading" href="/"><h1 class="heading">CloudPort</h1></a>
+
+<h2 class="slogan">Tunneling made easy</h2>
+
 <%= yield %>
+
+<div class="bottom-container">
+  <p>
+    CloudPort creates specially tailored
+    <b><a class="bottom" href="https://github.com/ivanilves/ptu/">p.t.u.</a></b>
+    builds to allow seamless user experience.
+  </p>
+  <p>
+    Our goal is to deliver ready to use, zero-configurable and disposable applications.
+  </p>
+  <p>
+    Unbelievable, all you need to do is just download and run application we have built!
+  </p>
+</div>
 
 </body>
 </html>

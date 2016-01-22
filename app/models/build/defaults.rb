@@ -40,7 +40,7 @@ class Build::Defaults
   end
 
   def self.cpu_architecture
-    :amd64
+    'amd64'
   end
 
 end

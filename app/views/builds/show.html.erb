@@ -1,10 +1,11 @@
-<% @title = "Build: #{@build.build_id}" %>
+<% @site_section = @build.build_id %>
 <div class="viewport">
-<h4>Build <%= @build.build_id %> for <%= @build.target_host %> is ready!</h4>
-<ul>
-<% @build.binary_files.each do |file_name| %>
-<li><a href="<%= url_for(action: :download, id: @build.build_id, file_name: file_name) %>">[ <%= file_name %> ]</a></li>
-<% end %>
-</ul>
-<p class="hint">Just download application for your operating system and run it ;)</p>
+<p>
+  Expose <b><%= @build.target_host %></b> as <b class="exposed-as"><%= @build.exposed_host %></b>
+</p>
+<p>
+  <a href="<%= url_for(action: :download, id: @build.build_id) %>">
+    <%= image_tag("/images/download.png", class: "download") %>
+  </a>
+</p>
 </div>
