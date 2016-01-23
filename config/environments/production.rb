@@ -82,4 +82,7 @@ Rails.application.configure do
 
   # p.t.u repo URL
   config.ptu_repo_url = 'file:///deploy/ptu'
+
+  # p.t.u repo tar file (optional)
+  config.ptu_repo_tar = '/deploy/ptu.tar'
 end

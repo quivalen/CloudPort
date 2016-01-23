@@ -19,6 +19,10 @@ class Build < ActiveRecord::Base
     @@ptu_repo_url ||= CloudPort::Application.config.ptu_repo_url
   end
 
+  def self.ptu_repo_tar
+    @@ptu_repo_tar ||= CloudPort::Application.config.ptu_repo_tar
+  end
+
   def self.ptu_tailor_command
     @@ptu_tailor_command ||= CloudPort::Application.config.ptu_tailor_command
   end
@@ -116,13 +120,27 @@ class Build < ActiveRecord::Base
   private
 
   def create_tailored_build
+    return false unless prepare_build_path
+
+    tailor_build!
+  end
+
+  def prepare_build_path
     FileUtils.mkdir(build_path)
-    system("git clone --depth 1 #{self.class.ptu_repo_url} #{build_path}")
+
+    if File.exist?(self.class.ptu_repo_tar)
+      system("tar -C #{build_path} -xf #{self.class.ptu_repo_tar}")
+    else
+      system("git clone --depth 1 #{self.class.ptu_repo_url} #{build_path}")
+    end
+  end
+
+  def tailor_build!
     FileUtils.chdir(build_path) do
       self.status = !!system("#{ptu_tailor_environment} #{self.class.ptu_tailor_command} #{ptu_tailor_options}")
     end
 
-    !!self.status
+    self.status
   end
 
   def ptu_tailor_environment
