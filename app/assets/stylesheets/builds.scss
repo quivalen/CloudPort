@@ -10,7 +10,8 @@ $field-bg-color: #d6e5f4;
 $field-focus-bg-color: #ffffbb;
 $button-hover-bg-color: #eeffff;
 $link-color: black;
-$link-hover-color: #e6f5ff;
+$link-hover-color: orange;
+$download-link-hover-color: #e6f5ff;
 
 $fonts: monospace, helvetica, sans-serif;
 $heading-fonts: impact, monospace;
@@ -57,7 +58,7 @@ div[class="viewport"] {
 }
 
 form[class="build"] {
-  padding-top: 30px;
+  padding-top: 35px;
 }
 
 label[for="expose"] {
@@ -172,7 +173,7 @@ img[class="download"] {
 img:hover[class="download"] {
   border: $huge-border;
   border-radius: $huge-radius;
-  border-color: $link-hover-color;
+  border-color: $download-link-hover-color;
 }
 
 div[class="bottom-container"] {
@@ -188,5 +189,5 @@ a:link[class="bottom"], a:visited[class="bottom"] {
 }
 
 a:hover[class="bottom"] {
-  text-decoration: underline;
+  color: $link-hover-color;
 }
