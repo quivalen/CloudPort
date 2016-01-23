@@ -102,6 +102,17 @@ class Build < ActiveRecord::Base
     operating_system == :windows
   end
 
+  def os
+    unless @os
+      name = self.class.operating_systems[operating_system]
+      bits = self.class.cpu_architectures[cpu_architecture]
+
+      @os = "#{name} (#{bits})"
+    end
+
+    @os
+  end
+
   private
 
   def create_tailored_build
