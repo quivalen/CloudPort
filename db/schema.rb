@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160117223231) do
+ActiveRecord::Schema.define(version: 20160123212407) do
 
   create_table "builds", force: :cascade do |t|
     t.string   "name",                limit: 255,                     null: false
@@ -27,12 +27,14 @@ ActiveRecord::Schema.define(version: 20160117223231) do
     t.integer  "exposed_port",        limit: 4,                       null: false
     t.string   "operating_system",    limit: 10,  default: "windows", null: false
     t.string   "cpu_architecture",    limit: 10,  default: "amd64",   null: false
+    t.string   "client_ip_address",   limit: 45,  default: "0.0.0.0", null: false
     t.boolean  "status",                                              null: false
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
   end
 
   add_index "builds", ["build_id"], name: "index_builds_on_build_id", unique: true, using: :btree
+  add_index "builds", ["client_ip_address"], name: "index_builds_on_client_ip_address", using: :btree
   add_index "builds", ["cpu_architecture"], name: "index_builds_on_cpu_architecture", using: :btree
   add_index "builds", ["docker_container_id"], name: "index_builds_on_docker_container_id", unique: true, using: :btree
   add_index "builds", ["operating_system"], name: "index_builds_on_operating_system", using: :btree

@@ -49,7 +49,8 @@ class Build < ActiveRecord::Base
     exposed_bind:       Build::Defaults.exposed_bind,
     exposed_port:       Build::Defaults.exposed_port,
     operating_system:   Build::Defaults.operating_system,
-    cpu_architecture:   Build::Defaults.cpu_architecture
+    cpu_architecture:   Build::Defaults.cpu_architecture,
+    client_ip_address:  Build::Defaults.client_ip_address
   )
     super
 

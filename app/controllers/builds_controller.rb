@@ -17,10 +17,11 @@ class BuildsController < ApplicationController
 
   def create
     @build = Build.new(
-      target_address:   params[:target_address],
-      target_port:      params[:target_port],
-      operating_system: params[:operating_system],
-      cpu_architecture: params[:cpu_architecture],
+      target_address:    params[:target_address],
+      target_port:       params[:target_port],
+      operating_system:  params[:operating_system],
+      cpu_architecture:  params[:cpu_architecture],
+      client_ip_address: request.remote_ip
     )
 
     if @build.save

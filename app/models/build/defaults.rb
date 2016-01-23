@@ -43,4 +43,8 @@ class Build::Defaults
     'amd64'
   end
 
+  def self.client_ip_address
+    '127.0.0.1'
+  end
+
 end
