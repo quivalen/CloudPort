@@ -11,7 +11,6 @@ server {
 	# Proxy everything to the Rails backend
 	location / {
 		include /etc/nginx/proxy_params;
-		proxy_read_timeout 180s;
 		proxy_pass http://{{ app_server_bind }}:{{ app_server_port }};
 	}
 }
