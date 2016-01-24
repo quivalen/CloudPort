@@ -41,7 +41,7 @@ h1[class="heading"] {
   margin-bottom: 2%;
 }
 
-h2[class="slogan"] {
+h4[class="slogan"] {
   background-color: $info-bg-color;
   text-transform: uppercase;
   border-top: $small-border;
@@ -192,4 +192,8 @@ a:link[class="bottom"], a:visited[class="bottom"] {
 
 a:hover[class="bottom"] {
   color: $link-hover-color;
+}
+
+p[class="copyright"] {
+  margin-top: 4%;
 }
