@@ -51,14 +51,15 @@ h4[class="slogan"] {
 
 div[class="viewport"] {
   width: 850px;
-  height: 250px;
+  height: 300px;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
 }
 
 form[class="build"] {
-  padding-top: 35px;
+  padding-top: 25px;
+  margin-bottom: 50px;
 }
 
 label[for="expose"] {
@@ -146,7 +147,7 @@ b[class="exposed-as"] {
 p[class="hint"] {
   font-style: italic;
   text-align: center;
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 img {
@@ -176,6 +177,10 @@ img:hover[class="download"] {
   border: $huge-border;
   border-radius: $huge-radius;
   border-color: $download-link-hover-color;
+}
+
+b[class="unbelievable"] {
+  color: black;
 }
 
 div[class="bottom-container"] {
