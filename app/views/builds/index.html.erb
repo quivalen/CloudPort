@@ -9,7 +9,13 @@
   <%= select_tag(:cpu_architecture, options_for_select(@cpu_architectures, @default_cpu_architecture)) %>
   </div>
 <% end %>
-<p class="hint">Use this form to generate your own personalized tunnel application</p>
+<p class="hint">
+  <b>Use this form to generate your own personalized tunnel application</b>
+</p>
+<p class="hint">
+  Address to expose is the address of some host inside your LAN,<br/>
+  for which you would like to provide temporary external access.
+</p>
 </div>
 <%= javascript_include_tag :os_guess %>
 <%= javascript_include_tag :form_validate %>
