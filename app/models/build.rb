@@ -118,6 +118,14 @@ class Build < ActiveRecord::Base
     @os
   end
 
+  def tip
+    if windows?
+      return "Unbelievable, all you need to do is just download and run application we have built!"
+    end
+
+    "Download application. Set executable bit with \"chmod +x #{binary_file_name}\" and run it!"
+  end
+
   private
 
   def create_tailored_build
