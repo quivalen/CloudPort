@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160212201339) do
+ActiveRecord::Schema.define(version: 20160212223300) do
 
   create_table "builds", force: :cascade do |t|
     t.string   "name",                limit: 255,                     null: false
@@ -40,13 +40,15 @@ ActiveRecord::Schema.define(version: 20160212201339) do
   add_index "builds", ["operating_system"], name: "index_builds_on_operating_system", using: :btree
 
   create_table "connections", force: :cascade do |t|
-    t.integer  "build_id",        limit: 4,   null: false
-    t.string   "remote",          limit: 255, null: false
-    t.datetime "connected_at",                null: false
-    t.datetime "disconnected_at",             null: false
+    t.integer  "build_id",        limit: 4,                   null: false
+    t.string   "remote",          limit: 255,                 null: false
+    t.boolean  "is_connected",                default: false, null: false
+    t.datetime "connected_at",                                null: false
+    t.datetime "disconnected_at",                             null: false
   end
 
   add_index "connections", ["build_id"], name: "index_connections_on_build_id", using: :btree
+  add_index "connections", ["is_connected"], name: "index_connections_on_is_connected", using: :btree
 
   add_foreign_key "connections", "builds"
 end

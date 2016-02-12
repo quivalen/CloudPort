@@ -2,6 +2,8 @@ class Connection < ActiveRecord::Base
 
   belongs_to :build
 
+  default_scope { where(is_connected: true) }
+
   ZERO_TIMESTAMP = '0000-01-01 00:00:00'.to_datetime
 
   def initialize(build:, remote:)
@@ -12,10 +14,11 @@ class Connection < ActiveRecord::Base
   end
 
   def connected?
-    self.disconnected_at == ZERO_TIMESTAMP
+    self.is_connected
   end
 
   def disconnect!
+    self.is_connected    = false
     self.disconnected_at = Time.now
     self.save
   end
