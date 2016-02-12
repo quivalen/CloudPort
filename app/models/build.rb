@@ -1,4 +1,7 @@
 class Build < ActiveRecord::Base
+
+  has_many :connections
+
   before_create { |b| b.build_id = SecureRandom.hex(3) }
 
   before_create :create_tailored_build
@@ -126,6 +129,33 @@ class Build < ActiveRecord::Base
     "Download application. Set executable bit with \"chmod +x #{binary_file_name}\" and run it!"
   end
 
+  # Probes container's tunneled remote connection addresses
+  #
+  # returns [Array] remote connection address in form 'addr:port'
+  def probe_remotes
+    netstat.map { |l| l.split[4] }
+  end
+
+  # Synchronize connection records in database with reality
+  #
+  # returns [ActiveRecord::Associations::CollectionProxy] actual connections
+  def synchronize_connections!
+    remotes     = probe_remotes
+    connections = self.connections
+
+    connections.each do |c|
+      c.disconnect! unless remotes.include?(c.remote)
+    end
+
+    remotes.each do |r|
+      unless self.connections.find_by_remote(r)
+        Connection.create(build: self, remote: r)
+      end
+    end
+
+    self.connections.reset
+  end
+
   private
 
   def create_tailored_build
@@ -205,6 +235,12 @@ class Build < ActiveRecord::Base
 
     container.stop if container.info['State']['Running']
     container.delete
+  end
+
+  def netstat
+    docker_container.exec(
+      ['netstat', '-n', '|', 'grep ']
+    )[0][0].split(%r{\n}).grep(%r{:#{exposed_port.to_s}\s.*\sESTABLISHED$})
   end
 
 end
