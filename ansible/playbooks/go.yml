@@ -2,7 +2,7 @@
 - hosts: cloudport
   vars_files:
     - ../vars/go.yml
-  sudo: yes
+  become: yes
   tasks:
     - name: Download Golang package
       get_url: url={{ go_package_url }} dest={{ go_package_file }}

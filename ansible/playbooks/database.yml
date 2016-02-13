@@ -2,7 +2,7 @@
 - hosts: cloudport
   vars_files:
     - ../vars/secrets.yml
-  sudo: yes
+  become: yes
   tasks:
     - name: Install MySQL
       apt: pkg={{ item }} state=latest

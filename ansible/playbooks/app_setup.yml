@@ -6,7 +6,7 @@
     - ../vars/secrets.yml
   vars:
     go_path: "{{ app_user_home }}/go/{{ go_version }}"
-  sudo: yes
+  become: yes
   tasks:
     - name: Disable hellborn Dash
       file: src=/bin/bash dest=/bin/sh owner=root group=root mode=0755 state=link force=yes

@@ -1,6 +1,6 @@
 ---
 - hosts: cloudport
-  sudo: yes
+  become: yes
   tasks:
     - name: Update operating system
       apt: upgrade=dist update_cache=yes

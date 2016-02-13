@@ -1,6 +1,6 @@
 ---
 - hosts: cloudport
-  sudo: yes
+  become: yes
   tasks:
     - name: Import Docker repo key
       apt_key: keyserver=p80.pool.sks-keyservers.net

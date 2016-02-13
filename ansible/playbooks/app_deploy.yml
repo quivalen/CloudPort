@@ -4,8 +4,8 @@
   vars_files:
     - ../vars/application.yml
     - ../vars/secrets.yml
-  sudo: yes
-  sudo_user: "{{ app_user_name }}"
+  become: yes
+  become_user: "{{ app_user_name }}"
   tasks:
     - name: Install bundler
       gem: name=bundler version={{ bundler_version }}
