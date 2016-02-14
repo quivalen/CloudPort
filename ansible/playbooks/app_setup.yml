@@ -95,11 +95,11 @@
                 validate="visudo -c -f %s"
     - name: Create application logrotate.d config file
       template: src=../templates/logrotate.d.j2
-                dest="/etc/logrotate.d/{{ app_name }}"
+                dest={{ app_logrotate_conf }}
                 owner=root
                 group=root
                 mode=0644
-    - name: Create application Upstart config
+    - name: Create application server Upstart config
       template: src=../templates/upstart.conf.j2
                 dest={{ app_upstart_file }}
                 owner={{ app_user_name }}

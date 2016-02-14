@@ -1,11 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-PLAYBOOK_YML = lambda do
-  return "ansible/playbooks/#{ENV['PLAYBOOK'].strip}.yml" if ENV['PLAYBOOK']
-
-  'ansible/main.yml'
-end.call
+PLAYBOOK_YML = "ansible/#{ENV.fetch('MODE', 'provision')}.yml"
 
 SECRETS_FILE = File.expand_path(File.dirname(__FILE__) + '/ansible/vars/secrets.yml')
 unless File.exist?(SECRETS_FILE)

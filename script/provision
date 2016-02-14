@@ -16,10 +16,6 @@ else
   APP_VERSION="develop"
 fi
 
-if [ "$(basename ${0})" == "deploy" ]; then
-  PLAYBOOK_FILE="$(dirname $0)/../ansible/playbooks/app_deploy.yml"
-else
-  PLAYBOOK_FILE="$(dirname $0)/../ansible/main.yml"
-fi
+PLAYBOOK_FILE="$(dirname $0)/../ansible/$(basename ${0}).yml"
 
 ansible-playbook -i ${HOSTS_FILE} -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}

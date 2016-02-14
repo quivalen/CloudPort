@@ -1,9 +1,9 @@
 # {{ ansible_managed }}
 #
-# Simple Rails application server instance
+# Rails application server configuration
 #
 description	"Rails application server: {{ app_name }}"
-author 		"Ivan Ilves <ivan.ilves@gmail.com>"
+author 		"{{ app_author }}"
 
 start on runlevel [2345]
 stop on runlevel [!2345]
@@ -11,28 +11,26 @@ stop on runlevel [!2345]
 setuid {{ app_user_name }}
 setgid {{ app_group_name }}
 umask 022
-
+reload signal USR2
 chdir {{ app_path }}
+
+env RAILS_ENV={{ app_env }}
+env DATABASE_PASSWORD={{ mysql_app_password }}
+env SECRET_KEY_BASE={{ secret_key_base }}
+env RAILS_SERVE_STATIC_FILES=yes
+env GOROOT="{{ go_root }}"
+env GOPATH="{{ go_path }}"
+env PATH="{{ gem_path }}/bin:{{ go_path }}/bin:{{ go_root }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+export PATH
 
 pre-start script
   sudo {{ app_pid_dir_script }}
 end script
 
-pre-stop script
-  [ -f {{ app_server_pid_file }} ] && kill -USR2 $(cat {{ app_server_pid_file }})
-end script
-
-script
-  trap '' HUP # Do NOT use upstart provided punk-ass reload!
-
-  export HOME={{ app_user_home }}
-
-  . {{ app_conf_file }}
-
-  bundle exec {{ app_server_name }} \
-    --bind tcp://{{ app_server_bind }}:{{ app_server_port }} \
-    --environment {{ app_env }} \
-    --tag {{ app_name }} \
-    --pidfile {{ app_server_pid_file }} \
-    --redirect-stdout {{ app_server_out_file }} --redirect-stderr {{ app_server_err_file }}
-end script
+exec bundle exec {{ app_server_name }} \
+  --bind tcp://{{ app_server_bind }}:{{ app_server_port }} \
+  --environment {{ app_env }} \
+  --tag {{ app_name }} \
+  --pidfile {{ app_server_pid_file }} \
+  --redirect-stdout {{ app_server_out_file }} --redirect-stderr {{ app_server_err_file }}

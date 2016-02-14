@@ -35,7 +35,20 @@ module CloudPort
     # A command used to create tailored p.t.u. builds
     config.ptu_tailor_command = ENV.fetch('PTU_TAILOR_COMMAND', 'script/tailor')
 
+    # Detects CloudPort server hostname
+    #
+    # param [String] file name to extract hostname from
+    #
+    # return [String] CloudPort Server hostname
+    def cloudport_hostname(file_name = '/etc/cloudport_hostname')
+      return ENV['CLOUDPORT_HOSTNAME'].strip if ENV['CLOUDPORT_HOSTNAME']
+
+      return IO.read(file_name).split(%r{\n})[0].strip if File.exist?(file_name)
+
+      '127.0.0.1'
+    end
+
     # Hostname to be tailored into p.t.u. builds
-    config.hostname = ENV.fetch('CLOUDPORT_HOSTNAME', '127.0.0.1')
+    config.hostname = cloudport_hostname
   end
 end
