@@ -1,13 +1,11 @@
 # {{ ansible_managed }}
 #
-# These settings are sourced inside '{{ app_user_name }}' user Bash session
+# This file is to be sourced inside '{{ app_user_name }}' user Bash session
 #
 export RAILS_ENV={{ app_env }}
 export DATABASE_PASSWORD={{ mysql_app_password }}
 export SECRET_KEY_BASE={{ secret_key_base }}
 export RAILS_SERVE_STATIC_FILES=yes
-
 export GOROOT="{{ go_root }}"
 export GOPATH="{{ go_path }}"
-
 export PATH="{{ gem_path }}/bin:${GOPATH}/bin:${GOROOT}/bin:${PATH}"

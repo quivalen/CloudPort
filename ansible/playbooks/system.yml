@@ -2,16 +2,13 @@
 - hosts: cloudport
   become: yes
   tasks:
-    - name: Update operating system
-      apt: upgrade=dist update_cache=yes
-           dpkg_options='force-confold,force-confdef'
-    - name: Install Git
-      apt: pkg=git state=latest
-    - name: Install Node.js
-      apt: pkg=nodejs state=latest
-    - name: Install build essentials
-      apt: pkg=build-essential state=latest
-    - name: Install Nginx
+    - name: Install development essentials
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - git
+        - nodejs
+        - build-essential
+    - name: Install Nginx HTTP server/reverse proxy
       apt: pkg=nginx state=latest
-    - name: Ensure Nginx enabled and started
+    - name: Ensure Nginx service enabled and started
       service: name=nginx enabled=yes state=started

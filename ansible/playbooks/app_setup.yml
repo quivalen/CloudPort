@@ -5,6 +5,16 @@
     - ../vars/go.yml
     - ../vars/secrets.yml
   vars:
+    app_server_name: 'puma'
+    app_server_bind: '127.0.0.1'
+    app_server_port: 8000
+    app_logrotate_conf: "/etc/logrotate.d/{{ app_name }}"
+    app_upstart_file: "/etc/init/{{ app_name }}.conf"
+    app_server_pid_file: "/var/run/{{ app_name }}/{{ app_server_name }}.pid"
+    app_log_path: "/var/log/{{ app_name }}"
+    app_server_out_file: "{{ app_log_path }}/{{ app_server_name }}-out.log"
+    app_server_err_file: "{{ app_log_path }}/{{ app_server_name }}-err.log"
+    app_host_file: "/etc/{{ app_name }}_hostname"
     go_path: "{{ app_user_home }}/go/{{ go_version }}"
   become: yes
   tasks:
@@ -17,17 +27,12 @@
       with_items:
         - "ruby{{ ruby_version }}"
         - "ruby{{ ruby_version }}-dev"
-    - name: Create application user group
-      group: name={{ app_group_name }} gid={{ app_user_gid }} state=present
-    - name: Create application user
-      user: name={{ app_user_name }}
-            uid={{ app_user_uid }}
-            group={{ app_group_name }}
-            groups=docker
-            home={{ app_user_home }}
-            shell=/bin/bash
-            comment='CloudPort application user'
-            state=present
+    - name: Create application config file
+      template: src=../templates/config.j2
+                dest={{ app_conf_file }}
+                owner={{ app_user_name }}
+                group={{ app_group_name }}
+                mode=0640
     - name: Create application host file
       template: src=../templates/app_host.j2
                 dest={{ app_host_file }}
@@ -35,39 +40,6 @@
                 group={{ app_group_name }}
                 mode=0644
                 force=no
-    - name: Create application config file
-      template: src=../templates/config.j2
-                dest={{ app_conf_file }}
-                owner={{ app_user_name }}
-                group={{ app_group_name }}
-                mode=0640
-    - name: Create application user home
-      file: name={{ app_user_home }}
-            owner={{ app_user_name }}
-            group={{ app_group_name }}
-            mode=0755
-            state=directory
-    - name: Create application user Bash aliases file
-      template: src=../templates/bash_aliases.j2
-                dest={{ app_user_bash_aliases }}
-                owner={{ app_user_name }}
-                group={{ app_group_name }}
-                mode=0644
-    - name: Setup MySQL application user
-      mysql_user: name={{ mysql_app_username }}
-                  priv=*.*:ALL
-                  host=localhost
-                  password={{ mysql_app_password }}
-                  check_implicit_admin=no
-                  login_user=root
-                  login_password={{ mysql_root_password }}
-                  state=present
-    - name: Create MySQL application user config file
-      template: src=../templates/my.cnf.j2
-                dest="{{ app_user_home }}/.my.cnf"
-                owner={{ app_user_name }}
-                group={{ app_group_name }}
-                mode=0600
     - name: Create Go path
       file: name={{ go_path }}
             owner={{ app_user_name }}
@@ -80,19 +52,12 @@
             group={{ app_group_name }}
             mode=0755
             state=directory
-    - name: Create application user log path
+    - name: Create application log path
       file: name={{ app_log_path }}
             owner={{ app_user_name }}
             group=adm
             mode=0755
             state=directory
-    - name: Create application sudoers.d config file
-      template: src=../templates/sudoers.d.j2
-                dest={{ app_sudoers_file }}
-                owner=root
-                group=root
-                mode=0440
-                validate="visudo -c -f %s"
     - name: Create application logrotate.d config file
       template: src=../templates/logrotate.d.j2
                 dest={{ app_logrotate_conf }}
@@ -102,9 +67,9 @@
     - name: Create application server Upstart config
       template: src=../templates/upstart.conf.j2
                 dest={{ app_upstart_file }}
-                owner={{ app_user_name }}
+                owner=root
                 group={{ app_group_name }}
-                mode=0644
+                mode=0640
       notify:
         - Reload Upstart configuration
     - name: Create Nginx site configuration

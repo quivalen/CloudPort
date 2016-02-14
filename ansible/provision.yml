@@ -3,5 +3,6 @@
 - include: playbooks/go.yml
 - include: playbooks/docker.yml
 - include: playbooks/database.yml
+- include: playbooks/app_user.yml
 - include: playbooks/app_setup.yml
 - include: playbooks/app_deploy.yml

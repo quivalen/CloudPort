@@ -4,16 +4,15 @@
     - ../vars/secrets.yml
   become: yes
   tasks:
-    - name: Install MySQL
+    - name: Install MySQL database server and related libraries
       apt: pkg={{ item }} state=latest
       with_items:
         - mariadb-server
         - mariadb-client
         - libmariadbclient-dev
+        - python-mysqldb
     - name: Ensure MySQL enabled and started
       service: name=mysql enabled=yes state=started
-    - name: Install Python interface to MySQL
-      apt: pkg=python-mysqldb state=latest
     - name: Setup MySQL root user
       mysql_user: name=root
                   host={{ item }}
