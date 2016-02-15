@@ -2,6 +2,8 @@
 - hosts: cloudport
   become: yes
   tasks:
+    - name: Update Apt cache
+      apt: update_cache=yes
     - name: Install development essentials
       apt: pkg={{ item }} state=latest
       with_items:
