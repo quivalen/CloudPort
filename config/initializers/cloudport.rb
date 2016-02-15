@@ -20,5 +20,11 @@ Docker::Image.create(
 # during initial provisioning of application!
 #
 if ActiveRecord::Base.connection.table_exists?(:builds)
-  Build.all.each { |b| b.docker_container.start }
+  Build.all.each do |b|
+    begin
+      b.docker_container.start
+    rescue => e
+      Rails.logger.error("Failed to start container: #{e.message}")
+    end
+  end
 end
