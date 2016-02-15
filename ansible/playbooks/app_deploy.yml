@@ -1,6 +1,5 @@
 ---
 - hosts: cloudport
-  vars:
   vars_files:
     - ../vars/application.yml
     - ../vars/secrets.yml
