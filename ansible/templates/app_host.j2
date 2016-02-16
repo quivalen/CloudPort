@@ -1,1 +1,5 @@
-{{ inventory_hostname }}
+{% if '10.0.2.15' in ansible_all_ipv4_addresses %}
+{{ ansible_all_ipv4_addresses[1] }}
+{% else %}
+{{ ansible_all_ipv4_addresses[0] }}
+{% endif %}
