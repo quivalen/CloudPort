@@ -8,9 +8,13 @@ end
 #
 # Ensure required Docker image pulled
 #
-Docker::Image.create(
-  'fromImage' => CloudPort::Application.config.docker_image
-)
+begin
+  Docker::Image.create(
+    'fromImage' => CloudPort::Application.config.docker_image
+  )
+rescue => e
+  Rails.logger.fatal("Failed to import Docker image: #{e.message}")
+end
 
 #
 # Start Docker containers for all builds
@@ -20,11 +24,15 @@ Docker::Image.create(
 # during initial provisioning of application!
 #
 if ActiveRecord::Base.connection.table_exists?(:builds)
-  Build.all.each do |b|
-    begin
-      b.docker_container.start
-    rescue => e
-      Rails.logger.error("Failed to start container: #{e.message}")
+  begin
+    Build.all.each do |b|
+      begin
+        b.docker_container.start
+      rescue => e
+        Rails.logger.error("Failed to start container: #{e.message}")
+      end
     end
+  rescue => e
+    rails.logger.fatal("Failed to initialize containers: #{e.message}")
   end
 end
