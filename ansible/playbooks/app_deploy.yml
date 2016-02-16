@@ -41,6 +41,7 @@
       shell: "{{ bundle }} install --retry=5 --deployment --without '{{ bundle_without }}'"
       args:
         chdir: "{{ app_path }}"
+        warn: no
     - name: Create database
       shell: "{{ bundle }} exec rake db:create && touch {{ db_created_flag }}"
       args:
@@ -57,3 +58,5 @@
         chdir: "{{ app_path }}"
     - name: Reload application server
       shell: "sudo {{ app_reload_script }}"
+      args:
+        warn: no
