@@ -37,6 +37,8 @@
         chdir: "{{ ptu_path }}"
     - name: Create p.t.u. tarball from repo
       shell: "tar -C {{ ptu_path }} -c . -f {{ ptu_path }}.tar"
+      args:
+        warn: no
     - name: Bundle install
       shell: "{{ bundle }} install --retry=5 --deployment --without '{{ bundle_without }}'"
       args:
