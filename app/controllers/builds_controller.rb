@@ -25,14 +25,14 @@ class BuildsController < ApplicationController
     )
 
     if @build.save
-      render text: @build.build_id
+      render text: @build.ptu_build_id
     else
       render nothing: true, status: :unprocessable_entity
     end
   end
 
   def show
-    @build = Build.find_by_build_id(params[:id])
+    @build = Build.find_by_ptu_build_id(params[:id])
 
     unless @build
       render nothing: true, status: :not_found
@@ -40,7 +40,7 @@ class BuildsController < ApplicationController
   end
 
   def download
-    build     = Build.find_by_build_id(params[:id])
+    build     = Build.find_by_ptu_build_id(params[:id])
 
     send_file(
       "#{build.binary_path}/#{build.binary_file_name}",

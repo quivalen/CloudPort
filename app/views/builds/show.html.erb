@@ -1,4 +1,4 @@
-<% @site_section = @build.build_id %>
+<% @site_section = @build.ptu_build_id %>
 <div class="viewport" style="width:1200px">
   <p>
     Expose <b><%= @build.target_host %></b> as
@@ -6,7 +6,7 @@
     on <b><%= @build.os %></b>
   </p>
 <p>
-  <a href="<%= url_for(action: :download, id: @build.build_id) %>">
+  <a href="<%= url_for(action: :download, id: @build.ptu_build_id) %>">
     <%= image_tag(
       "/images/download.png",
       class: "download",

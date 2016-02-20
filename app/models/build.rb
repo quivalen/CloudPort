@@ -1,14 +1,13 @@
 class Build < ActiveRecord::Base
 
-  has_many :connections
+  has_one :container, dependent: :destroy
 
-  before_create { |b| b.build_id = SecureRandom.hex(3) }
+  before_create { |b| b.ptu_build_id = SecureRandom.hex(3) }
 
   before_create :create_tailored_build
   after_destroy :delete_tailored_build
 
-  before_create :create_docker_container
-  after_destroy :delete_docker_container
+  after_create   { |b| Container.create(build: b) }
 
   def self.ssh_port_offset
     @@ssh_port_offset ||= CloudPort::Application.config.ssh_port_offset
@@ -73,7 +72,7 @@ class Build < ActiveRecord::Base
   end
 
   def build_path
-    @build_path ||= "#{self.class.build_root}/#{build_id}"
+    @build_path ||= "#{self.class.build_root}/#{ptu_build_id}"
   end
 
   def binary_path
@@ -87,11 +86,7 @@ class Build < ActiveRecord::Base
   end
 
   def binary_file_name
-    @binary_file ||= "ptu-#{operating_system}-#{cpu_architecture}-#{build_id}#{binary_extension}"
-  end
-
-  def docker_container
-    @docker_container ||= Docker::Container.get(docker_container_id)
+    @binary_file ||= "ptu-#{operating_system}-#{cpu_architecture}-#{ptu_build_id}#{binary_extension}"
   end
 
   def operating_system
@@ -129,33 +124,6 @@ class Build < ActiveRecord::Base
     "Download application. Set executable bit with \"chmod +x #{binary_file_name}\" and run it!"
   end
 
-  # Probes container's tunneled remote connection addresses
-  #
-  # returns [Array] remote connection address in form 'addr:port'
-  def probe_remotes
-    netstat.map { |l| l.split[4] }
-  end
-
-  # Synchronize connection records in database with reality
-  #
-  # returns [ActiveRecord::Associations::CollectionProxy] actual connections
-  def synchronize_connections!
-    remotes     = probe_remotes
-    connections = self.connections
-
-    connections.each do |c|
-      c.disconnect! unless remotes.include?(c.remote)
-    end
-
-    remotes.each do |r|
-      unless self.connections.find_by_remote(r)
-        Connection.create(build: self, remote: r)
-      end
-    end
-
-    self.connections.reset
-  end
-
   private
 
   def create_tailored_build
@@ -183,7 +151,7 @@ class Build < ActiveRecord::Base
   end
 
   def ptu_tailor_environment
-    "SKIP_CI=yes BUILD_ID=#{build_id} OPERATING_SYSTEMS=#{operating_system} CPU_ARCHITECTURES=#{cpu_architecture}"
+    "SKIP_CI=yes BUILD_ID=#{ptu_build_id} OPERATING_SYSTEMS=#{operating_system} CPU_ARCHITECTURES=#{cpu_architecture}"
   end
 
   def ptu_tailor_options
@@ -192,55 +160,6 @@ class Build < ActiveRecord::Base
 
   def delete_tailored_build
     FileUtils.rm_rf(build_path)
-  end
-
-  def create_docker_container
-    guest_ssh_port     = '22/tcp'
-    host_ssh_port      = ssh_server_port.to_s
-    guest_exposed_port = "#{exposed_port.to_s}/tcp"
-    host_exposed_port  = exposed_port.to_s
-
-    container = Docker::Container.create(
-      'Image'        => CloudPort::Application.config.docker_image,
-      'ExposedPorts' => {
-        guest_ssh_port => {}, guest_exposed_port => {},
-      },
-      'PortBindings' => {
-        guest_ssh_port      => [{ 'HostPort' => host_ssh_port }],
-        guest_exposed_port  => [{ 'HostPort' => host_exposed_port }],
-      },
-      'name' => build_id,
-    )
-
-    container.start
-
-    container.exec(
-      ['passwd', 'root'],
-      stdin: StringIO.new("#{ssh_password}\n#{ssh_password}")
-    )
-
-    container.exec(
-      ['bash', '-c', 'echo GatewayPorts yes >>/etc/ssh/sshd_config']
-    )
-
-    container.exec(
-      ['kill', '-HUP', '1']
-    )
-
-    self.docker_container_id = container.id
-  end
-
-  def delete_docker_container
-    container = docker_container
-
-    container.stop if container.info['State']['Running']
-    container.delete
-  end
-
-  def netstat
-    docker_container.exec(
-      ['netstat', '-n', '|', 'grep ']
-    )[0][0].split(%r{\n}).grep(%r{:#{exposed_port.to_s}\s.*\sESTABLISHED$})
   end
 
 end

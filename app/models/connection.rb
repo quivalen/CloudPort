@@ -1,12 +1,12 @@
 class Connection < ActiveRecord::Base
 
-  belongs_to :build
+  belongs_to :container
 
   default_scope { where(is_connected: true) }
 
   ZERO_TIMESTAMP = '0000-01-01 00:00:00'.to_datetime
 
-  def initialize(build:, remote:)
+  def initialize(remote:)
     super
 
     self.connected_at     = Time.now

@@ -24,5 +24,5 @@ end
 # Start Docker containers for all builds
 #
 unless running_rake?
-  Build.all.each { |b| b.docker_container.start }
+  Container.all.each { |c| c.docker_container.start }
 end
