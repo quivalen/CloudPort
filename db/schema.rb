@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160220231410) do
+ActiveRecord::Schema.define(version: 20160221165114) do
 
   create_table "builds", force: :cascade do |t|
     t.string   "ptu_build_id",       limit: 6,                       null: false
@@ -58,6 +58,6 @@ ActiveRecord::Schema.define(version: 20160220231410) do
   add_index "containers", ["build_id"], name: "index_containers_on_build_id", unique: true, using: :btree
   add_index "containers", ["docker_container_id"], name: "index_containers_on_docker_container_id", unique: true, using: :btree
 
-  add_foreign_key "connections", "containers"
-  add_foreign_key "containers", "builds"
+  add_foreign_key "connections", "containers", on_delete: :cascade
+  add_foreign_key "containers", "builds", on_delete: :cascade
 end
