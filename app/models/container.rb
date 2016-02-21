@@ -34,7 +34,7 @@ class Container < ActiveRecord::Base
 
     remotes.each do |r|
       unless self.connections.find_by_remote(r)
-        self.connections.build(remote: r)
+        self.connections.build(remote: r).save
       end
     end
 
@@ -89,7 +89,7 @@ class Container < ActiveRecord::Base
   def netstat
     docker_container.exec(
       ['netstat', '-n', '|', 'grep ']
-    )[0][0].split(%r{\n}).grep(%r{:#{exposed_port.to_s}\s.*\sESTABLISHED$})
+    )[0][0].split(%r{\n}).grep(%r{:#{build.exposed_port.to_s}\s.*\sESTABLISHED$})
   end
 
 end

@@ -14,3 +14,7 @@
       apt: pkg=nginx state=latest
     - name: Ensure Nginx service enabled and started
       service: name=nginx enabled=yes state=started
+    - name: Install Redis in-memory data structure store
+      apt: pkg=redis-server state=latest
+    - name: Ensure Redis service enabled and started
+      service: name=redis-server enabled=yes state=started

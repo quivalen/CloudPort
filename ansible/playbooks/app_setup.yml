@@ -9,12 +9,17 @@
     app_server_bind: '127.0.0.1'
     app_server_port: 8000
     app_logrotate_conf: "/etc/logrotate.d/{{ app_name }}"
-    app_upstart_file: "/etc/init/{{ app_name }}.conf"
-    app_server_pid_file: "/var/run/{{ app_name }}/{{ app_server_name }}.pid"
+    app_server_upstart_file: "/etc/init/{{ app_name }}.conf"
     app_log_path: "/var/log/{{ app_name }}"
+    app_pid_path: "/var/run/{{ app_name }}"
     app_server_out_file: "{{ app_log_path }}/{{ app_server_name }}-out.log"
     app_server_err_file: "{{ app_log_path }}/{{ app_server_name }}-err.log"
+    app_server_pid_file: "{{ app_pid_path }}/{{ app_server_name }}.pid"
     app_host_file: "/etc/{{ app_name }}_hostname"
+    scheduler_name: "sidekiq"
+    scheduler_upstart_file: "/etc/init/{{ scheduler_name }}.conf"
+    scheduler_log_file: "{{ app_log_path }}/{{ scheduler_name }}.log"
+    scheduler_pid_file: "{{ app_pid_path }}/{{ scheduler_name }}.pid"
     go_path: "{{ app_user_home }}/go/{{ go_version }}"
   become: yes
   tasks:
@@ -65,8 +70,16 @@
                 group=root
                 mode=0644
     - name: Create application server Upstart config
-      template: src=../templates/upstart.conf.j2
-                dest={{ app_upstart_file }}
+      template: src=../templates/upstart/app_server.conf.j2
+                dest={{ app_server_upstart_file }}
+                owner=root
+                group={{ app_group_name }}
+                mode=0640
+      notify:
+        - Reload Upstart configuration
+    - name: Create scheduler Upstart config
+      template: src=../templates/upstart/scheduler.conf.j2
+                dest={{ scheduler_upstart_file }}
                 owner=root
                 group={{ app_group_name }}
                 mode=0640

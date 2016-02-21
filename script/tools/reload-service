@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Reload application server (after code change/re-deploy)
+# Reload application server and scheduler
+# ... after code change/re-deploy ...
 #
 : ${APP_NAME:=cloudport}
 
@@ -11,10 +12,19 @@ fi
 
 set -e
 
-STATUS=$(status ${APP_NAME} | cut -f2 -d" " | sed 's/,$//')
+function reload_service() {
+  SERVICE=${1}
+  COMMAND=${2-'reload'}
 
-if [ ${STATUS} == 'start/running' ]; then
-  reload ${APP_NAME}
-else
-  start ${APP_NAME}
-fi
+  STATUS=$(status ${SERVICE} | cut -f2 -d" " | sed 's/,$//')
+
+  if [ ${STATUS} == 'start/running' ]; then
+    ${COMMAND} ${SERVICE}
+  else
+    start ${SERVICE}
+  fi
+}
+
+reload_service ${APP_NAME}
+
+reload_service sidekiq 'restart'

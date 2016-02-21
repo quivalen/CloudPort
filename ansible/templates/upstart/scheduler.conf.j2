@@ -1,0 +1,38 @@
+# {{ ansible_managed }}
+#
+# Rails scheduler configuration
+#
+description	"Rails scheduler: {{ app_name }}"
+author 		"{{ app_author }}"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+setuid {{ app_user_name }}
+setgid {{ app_group_name }}
+umask 022
+reload signal USR2
+chdir {{ app_path }}
+
+env RAILS_ENV="{{ app_env }}"
+env DATABASE_PASSWORD="{{ mysql_app_password }}"
+env SECRET_KEY_BASE="{{ secret_key_base }}"
+env GOROOT="{{ go_root }}"
+env GOPATH="{{ go_path }}"
+env PATH="{{ gem_path }}/bin:{{ go_path }}/bin:{{ go_root }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+env HOME="{{ app_user_home }}"
+
+env SKIP_DOCKER=yes
+
+export PATH
+export HOME
+
+pre-start script
+  sudo {{ app_pid_dir_script }}
+end script
+
+exec bundle exec {{ scheduler_name }} \
+  --environment {{ app_env }} \
+  --tag {{ app_name }} \
+  --logfile {{ scheduler_log_file }} \
+  --pidfile {{ scheduler_pid_file }}
