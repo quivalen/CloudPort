@@ -1,33 +1,17 @@
 class Build < ActiveRecord::Base
 
-  has_one :container, dependent: :destroy
+  extend Build::Globals
+
+  include Build::Tips
+
+  has_one :container
 
   before_create { |b| b.ptu_build_id = SecureRandom.hex(3) }
 
   before_create :create_tailored_build
   after_destroy :delete_tailored_build
 
-  after_create   { |b| Container.create(build: b) }
-
-  def self.ssh_port_offset
-    @@ssh_port_offset ||= CloudPort::Application.config.ssh_port_offset
-  end
-
-  def self.build_root
-    @@build_root ||= CloudPort::Application.config.build_root
-  end
-
-  def self.ptu_repo_url
-    @@ptu_repo_url ||= CloudPort::Application.config.ptu_repo_url
-  end
-
-  def self.ptu_repo_tar
-    @@ptu_repo_tar ||= CloudPort::Application.config.ptu_repo_tar
-  end
-
-  def self.ptu_tailor_command
-    @@ptu_tailor_command ||= CloudPort::Application.config.ptu_tailor_command
-  end
+  after_create { |b| Container.create(build: b) }
 
   def self.operating_systems
     @@operating_systems ||= {
@@ -79,16 +63,6 @@ class Build < ActiveRecord::Base
     @binary_path ||= "#{build_path}/bin"
   end
 
-  def binary_extension
-    return '.exe' if windows?
-
-    ''
-  end
-
-  def binary_file_name
-    @binary_file ||= "ptu-#{operating_system}-#{cpu_architecture}-#{ptu_build_id}#{binary_extension}"
-  end
-
   def operating_system
     super.to_sym
   end
@@ -105,23 +79,14 @@ class Build < ActiveRecord::Base
     operating_system == :windows
   end
 
-  def os
-    unless @os
-      name = self.class.operating_systems[operating_system]
-      bits = self.class.cpu_architectures[cpu_architecture]
+  def binary_extension
+    return '.exe' if windows?
 
-      @os = "#{name} (#{bits})"
-    end
-
-    @os
+    ''
   end
 
-  def tip
-    if windows?
-      return "Unbelievable, all you need to do is just download and run application we have built!"
-    end
-
-    "Download application. Set executable bit with \"chmod +x #{binary_file_name}\" and run it!"
+  def binary_file_name
+    @binary_file ||= "ptu-#{operating_system}-#{cpu_architecture}-#{ptu_build_id}#{binary_extension}"
   end
 
   private

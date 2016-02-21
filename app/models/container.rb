@@ -1,7 +1,8 @@
 class Container < ActiveRecord::Base
 
   belongs_to :build
-  has_many :connections, dependent: :destroy
+
+  has_many :connections
 
   before_create :create_docker_container
   after_destroy :delete_docker_container
