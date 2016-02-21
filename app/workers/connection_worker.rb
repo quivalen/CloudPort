@@ -5,8 +5,8 @@ class ConnectionWorker
   recurrence { minutely }
 
   def perform
-    Build.all.each do |build|
-      build.synchronize_connections!
+    Container.all.each do |c|
+      c.synchronize_connections!
     end
   end
 end
