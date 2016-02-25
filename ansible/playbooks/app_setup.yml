@@ -21,6 +21,8 @@
     scheduler_log_file: "{{ app_log_path }}/{{ scheduler_name }}.log"
     scheduler_pid_file: "{{ app_pid_path }}/{{ scheduler_name }}.pid"
     go_path: "{{ app_user_home }}/go/{{ go_version }}"
+    path: "{{ bundle_gem_path }}/bin:{{ app_user_gem_path }}/bin:{{ go_path }}/bin:{{ go_root }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    gem_path: "{{ bundle_gem_path }}:{{ app_user_gem_path }}"
   become: yes
   tasks:
     - name: Disable hellborn Dash

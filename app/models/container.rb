@@ -7,6 +7,8 @@ class Container < ActiveRecord::Base
   before_create :create_docker_container
   after_destroy :delete_docker_container
 
+  SSH_PORT = 22
+
   # Gets reference to a Docker container serving build
   #
   # returns [Docker::Container] a reference to Docker container
@@ -14,27 +16,32 @@ class Container < ActiveRecord::Base
     @docker_container ||= Docker::Container.get(docker_container_id)
   end
 
-  # Probes container's tunneled remote connection addresses
+  # Returns container's connection remote addresses (and is connection direct or forwarded)
   #
-  # returns [Array] remote connection address in form 'addr:port'
-  def probe_remotes
-    netstat.map { |l| l.split[4] }
+  # returns [Hash] remote connection address/type in form { 'addr:port' => true|false }
+  def remotes
+    remotes = {}
+
+    probe_remote_connections.each do |l, r|
+      remotes[r] = !!!l.match(%r{^[0-9\.]+:#{SSH_PORT}$})
+    end
+
+    remotes
   end
 
   # Synchronize connection records in database with reality
   #
   # returns [ActiveRecord::Associations::CollectionProxy] actual connections
   def synchronize_connections!
-    remotes     = probe_remotes
     connections = self.connections
 
     connections.each do |c|
       c.disconnect! unless remotes.include?(c.remote)
     end
 
-    remotes.each do |r|
+    remotes.each do |r, f|
       unless self.connections.find_by_remote(r)
-        self.connections.build(remote: r).save
+        self.connections.build(remote: r, is_forwarded: f).save
       end
     end
 
@@ -44,7 +51,7 @@ class Container < ActiveRecord::Base
   private
 
   def create_docker_container
-    guest_ssh_port     = '22/tcp'
+    guest_ssh_port     = "#{SSH_PORT}/tcp"
     host_ssh_port      = build.ssh_server_port.to_s
     guest_exposed_port = "#{build.exposed_port.to_s}/tcp"
     host_exposed_port  = build.exposed_port.to_s
@@ -86,10 +93,16 @@ class Container < ActiveRecord::Base
     container.delete
   end
 
+  def remote_connection_filter_regex
+    %r{\s+[0-9\.]+:(#{SSH_PORT}|#{build.exposed_port.to_s})\s+[0-9\.]+:[0-9]+\s+ESTABLISHED$}
+  end
+
   def netstat
-    docker_container.exec(
-      ['netstat', '-n', '|', 'grep ']
-    )[0][0].split(%r{\n}).grep(%r{:#{build.exposed_port.to_s}\s.*\sESTABLISHED$})
+    docker_container.exec(['netstat', '-n', '|', 'grep '])[0][0].split(%r{\n}).grep(remote_connection_filter_regex)
+  end
+
+  def probe_remote_connections
+    netstat.map { |l| [l.split[3], l.split[4]] }
   end
 
 end

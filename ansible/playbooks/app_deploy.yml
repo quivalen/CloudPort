@@ -4,6 +4,7 @@
     - ../vars/application.yml
     - ../vars/secrets.yml
   vars:
+    bundler_cmd: ". {{ app_conf_file }} && {{ app_user_gem_path }}/bin/bundle"
     db_created_flag: "{{ app_user_home }}/.db_created"
     db_schema_loaded_flag: "{{ app_user_home }}/.db_schema_loaded"
   become: yes
@@ -40,22 +41,22 @@
       args:
         warn: no
     - name: Bundle install
-      shell: "{{ bundle }} install --retry=5 --deployment --without '{{ bundle_without }}'"
+      shell: "{{ bundler_cmd }} install --retry=5 --deployment --without '{{ bundle_without }}'"
       args:
         chdir: "{{ app_path }}"
         warn: no
     - name: Create database
-      shell: "{{ bundle }} exec rake db:create && touch {{ db_created_flag }}"
+      shell: "{{ bundler_cmd }} exec rake db:create && touch {{ db_created_flag }}"
       args:
         chdir: "{{ app_path }}"
         creates: "{{ db_created_flag }}"
     - name: Load database schema
-      shell: "{{ bundle }} exec rake db:schema:load && touch {{ db_schema_loaded_flag }}"
+      shell: "{{ bundler_cmd }} exec rake db:schema:load && touch {{ db_schema_loaded_flag }}"
       args:
         chdir: "{{ app_path }}"
         creates: "{{ db_schema_loaded_flag }}"
     - name: Run database migrations
-      shell: "{{ bundle }} exec rake db:migrate"
+      shell: "{{ bundler_cmd }} exec rake db:migrate"
       args:
         chdir: "{{ app_path }}"
     - name: Reload application server

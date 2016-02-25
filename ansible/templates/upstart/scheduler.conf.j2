@@ -16,10 +16,8 @@ chdir {{ app_path }}
 
 env RAILS_ENV="{{ app_env }}"
 env DATABASE_PASSWORD="{{ mysql_app_password }}"
-env SECRET_KEY_BASE="{{ secret_key_base }}"
-env GOROOT="{{ go_root }}"
-env GOPATH="{{ go_path }}"
-env PATH="{{ gem_path }}/bin:{{ go_path }}/bin:{{ go_root }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+env PATH="{{ path }}"
+env GEM_PATH="{{ gem_path }}"
 env HOME="{{ app_user_home }}"
 
 env SKIP_DOCKER=yes
@@ -31,7 +29,7 @@ pre-start script
   sudo {{ app_pid_dir_script }}
 end script
 
-exec bundle exec {{ scheduler_name }} \
+exec {{ scheduler_name }} \
   --environment {{ app_env }} \
   --tag {{ app_name }} \
   --logfile {{ scheduler_log_file }} \
