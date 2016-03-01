@@ -6,6 +6,8 @@ class Build < ActiveRecord::Base
 
   has_one :container
 
+  delegate :connections, to: :container
+
   before_create { |b| b.ptu_build_id = SecureRandom.hex(3) }
 
   before_create :create_tailored_build

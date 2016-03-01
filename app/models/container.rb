@@ -16,7 +16,7 @@ class Container < ActiveRecord::Base
     @docker_container ||= Docker::Container.get(docker_container_id)
   end
 
-  # Returns container's connection remote addresses (and is connection direct or forwarded)
+  # Returns container's connection remote addresses (and is connection forwarded or direct)
   #
   # returns [Hash] remote connection address/type in form { 'addr:port' => true|false }
   def remotes

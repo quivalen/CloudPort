@@ -2,7 +2,7 @@ class Connection < ActiveRecord::Base
 
   belongs_to :container
 
-  default_scope { where(is_connected: true) }
+  scope :active, -> { where(is_connected: true) }
 
   ZERO_TIMESTAMP = '0000-01-01 00:00:00'.to_datetime
 
@@ -16,7 +16,7 @@ class Connection < ActiveRecord::Base
   # Is connection active (connected) ?
   #
   # return [Boolean] true, if active / false otherwise
-  def connected?
+  def active?
     self.is_connected
   end
 
@@ -24,7 +24,7 @@ class Connection < ActiveRecord::Base
  #
  # return [Boolean] true, if disconnected a connection / false, if nothing to do
   def disconnect!
-    return false unless connected?
+    return false unless active?
 
     self.is_connected    = false
     self.disconnected_at = Time.now
