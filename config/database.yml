@@ -49,4 +49,5 @@ test:
 #
 production:
   <<: *default
+  pool: 35
   database: cloudport
