@@ -1,21 +1,21 @@
 <div class="viewport">
-<%= form_tag("/build", remote: true, class: "build") do %>
-  <%= label_tag(:expose, "Expose:") %>
-  <%= text_field_tag(:target_address, 'localhost', onkeyup: "validateTargetAddress()") %>
-  <%= number_field_tag(:target_port, 22, min: 1, max: 65535) %>
-  <%= submit_tag("Go!", onclick: "return validateForm()") %>
-  <div class="xcompile">
-  <%= select_tag(:operating_system, options_for_select(@operating_systems, @default_operating_system)) %>
-  <%= select_tag(:cpu_architecture, options_for_select(@cpu_architectures, @default_cpu_architecture)) %>
-  </div>
-<% end %>
-<p class="hint">
-  <b>Use this form to generate your own personalized tunnel application</b>
-</p>
-<p class="hint">
-  Address to expose is the address of some host inside your LAN,<br/>
-  for which you would like to provide temporary external access.
-</p>
+  <%= form_tag("/build", remote: true, class: "build") do %>
+    <%= label_tag(:expose, "Expose:") %>
+    <%= text_field_tag(:target_address, 'localhost', onkeyup: "validateTargetAddress()") %>
+    <%= number_field_tag(:target_port, 22, min: 1, max: 65535) %>
+    <%= submit_tag("Go!", onclick: "return validateForm()") %>
+    <div class="xcompile">
+      <%= select_tag(:operating_system, options_for_select(@operating_systems, @default_operating_system)) %>
+      <%= select_tag(:cpu_architecture, options_for_select(@cpu_architectures, @default_cpu_architecture)) %>
+    </div>
+  <% end %>
+  <p class="hint">
+    <b>Use this form to generate your own personalized tunnel application</b>
+  </p>
+  <p class="hint">
+    Address to expose is the address of some host inside your LAN,<br/>
+    for which you would like to provide temporary external access.
+  </p>
 </div>
 <%= javascript_include_tag :os_guess %>
 <%= javascript_include_tag :form_validate %>

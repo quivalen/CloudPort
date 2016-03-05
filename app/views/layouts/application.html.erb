@@ -8,28 +8,9 @@
   <link rel="shortcut icon" href="/favicon.png" />
 </head>
 <body>
-
-<a class="heading" href="/"><h1 class="heading">CloudPort</h1></a>
-
-<h4 class="slogan">Anonymous reverse tunnels</h4>
-
-<%= yield %>
-
-<div class="bottom-container">
-  <p>
-    CloudPort creates specially tailored
-    <b><a class="bottom" href="https://github.com/ivanilves/ptu/">[ptu]</a></b>
-    builds to allow seamless user experience.
-  </p>
-  <p>
-    Our goal is to deliver ready to use, zero-configurable and disposable applications.
-  </p>
-  <p>
-    If application usage is not obvious to you, drop us a <b><a class="bottom" href="mailto:ivan.ilves@gmail.com">line</a></b>. We appreciate feedback!
-  </p>
-</div>
-
-<p class="copyright">By Ivan Ilves, 2016</p>
-
+  <%= render :partial => 'layouts/header' %>
+  <%= yield %>
+  <%= render :partial => 'layouts/footer' %>
+  <%= render :partial => 'layouts/copyright' %>
 </body>
 </html>
