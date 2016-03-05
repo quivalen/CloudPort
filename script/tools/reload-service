@@ -3,8 +3,6 @@
 # Reload application server and scheduler
 # ... after code change/re-deploy ...
 #
-: ${APP_NAME:=cloudport}
-
 if [ ${UID} -ne 0 ]; then
   echo "${0} must be run only by root!"
   exit 1
@@ -25,6 +23,5 @@ function reload_service() {
   fi
 }
 
-reload_service ${APP_NAME}
-
+reload_service cloudport
 reload_service sidekiq 'restart'

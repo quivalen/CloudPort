@@ -30,6 +30,7 @@
         - Create database
         - Load database schema
         - Run database migrations
+        - Pull Docker [base] image
         - Reload application server
   handlers:
     - name: Install p.t.u. dependencies
@@ -57,6 +58,10 @@
         creates: "{{ db_schema_loaded_flag }}"
     - name: Run database migrations
       shell: "{{ bundler_cmd }} exec rake db:migrate"
+      args:
+        chdir: "{{ app_path }}"
+    - name: Pull Docker [base] image
+      shell: "{{ bundler_cmd }} exec {{ app_path }}/script/tools/pull-docker-image"
       args:
         chdir: "{{ app_path }}"
     - name: Reload application server

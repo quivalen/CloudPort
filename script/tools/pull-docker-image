@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#
+# Pull Docker [base] image
+#
+rails runner "Docker::Image.create('fromImage' => CloudPort::Application.config.docker_image)"
