@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+# Fetch ExtJS GPL distribution
+#
+VERSION='5.1.0'
+EXT_DIR="ext-${VERSION}"
+ARCHIVE="${EXT_DIR}-gpl.zip"
+
+set -e
+
+pushd "$(dirname ${0})/../../public"
+  [[ -d ${EXT_DIR} ]] && exit 0
+
+  wget "http://cdn.sencha.com/ext/gpl/${ARCHIVE}"
+
+  unzip ${ARCHIVE}
+
+  ln -nfs ${EXT_DIR} extjs
+
+  rm ${ARCHIVE}
+popd

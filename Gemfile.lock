@@ -96,6 +96,16 @@ GEM
     minitest (5.8.4)
     multi_json (1.11.2)
     mysql2 (0.4.3)
+    netzke (1.0.0.0)
+      netzke-basepack (= 1.0.0.0)
+      netzke-core (= 1.0.0.0)
+      netzke-testing (= 1.0.0.0)
+    netzke-basepack (1.0.0.0)
+    netzke-core (1.0.0.0)
+      execjs
+      uglifier
+    netzke-testing (1.0.0.0)
+      coffee-script
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     puma (2.15.3)
@@ -184,6 +194,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   mysql2 (>= 0.3.13, < 0.5)
+  netzke
   puma (~> 2.15.3)
   rails (= 4.2.5)
   sass-rails (~> 5.0)

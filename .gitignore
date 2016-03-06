@@ -4,22 +4,29 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore bundler config
+# Bundler config
 /.bundle
 
-# Ignore bundled gems (do not contaminate Git repo)
+# Bundled gems (do not contaminate Git repo)
 /vendor/bundle/*
 
-# Ignore all logfiles and tempfiles
+# Logfiles and tempfiles
 /log/*
 !/log/.keep
 /tmp
 
-# Ignore Vim swap files
+# Vim swap files
 *.swp
 
-# Ignore Vagrant working directory
+# Vagrant working directory
 .vagrant
 
-# Ignore Ansible secrets
+# Ansible secrets
 secrets.yml
+
+# ExtJS
+/public/extjs
+/public/ext-*
+
+# Icons
+/public/images/icons

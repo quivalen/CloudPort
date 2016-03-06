@@ -60,4 +60,12 @@ Rails.application.routes.draw do
   post 'build/create'      => 'builds#create'
   get 'build/:id'          => 'builds#show'
   get 'build/download/:id' => 'builds#download'
+
+  # Administrator interface
+  get 'manage' => 'manage#index'
+
+  # Add this for Netzke, rich client-server components framework for Web
+  CloudPort::Application.routes.draw do
+    netzke
+  end
 end

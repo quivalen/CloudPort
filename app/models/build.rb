@@ -4,9 +4,7 @@ class Build < ActiveRecord::Base
 
   include Build::Tips
 
-  has_one :container
-
-  delegate :connections, to: :container
+  has_one :container, dependent: :delete
 
   before_create { |b| b.ptu_build_id = SecureRandom.hex(3) }
 

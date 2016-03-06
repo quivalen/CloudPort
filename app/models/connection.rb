@@ -2,7 +2,9 @@ class Connection < ActiveRecord::Base
 
   belongs_to :container
 
-  scope :active, -> { where(is_connected: true) }
+  scope :active,    -> { where(is_connected: true) }
+  scope :direct,    -> { where(is_connected: true, is_forwarded: false) }
+  scope :forwarded, -> { where(is_connected: true, is_forwarded: true) }
 
   ZERO_TIMESTAMP = '0000-01-01 00:00:00'.to_datetime
 
@@ -18,6 +20,20 @@ class Connection < ActiveRecord::Base
   # return [Boolean] true, if active / false otherwise
   def active?
     self.is_connected
+  end
+
+  # Is connection direct (p.t.u. connected) ?
+  #
+  # return [Boolean] true, if direct / false otherwise
+  def direct?
+    !self.is_forwarded
+  end
+
+  # Is connection forwarded (connected over established p.t.u. tunnel) ?
+  #
+  # return [Boolean] true, if forwarded / false otherwise
+  def forwarded?
+    self.is_forwarded
   end
 
  # Disconnect connection, if connected

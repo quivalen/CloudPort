@@ -2,23 +2,23 @@ class Container < ActiveRecord::Base
 
   belongs_to :build
 
-  has_many :connections
+  has_many :connections, dependent: :delete_all
 
   before_create :create_docker_container
   after_destroy :delete_docker_container
 
   SSH_PORT = 22
 
-  # Gets reference to a Docker container serving build
+  # Get reference to a Docker container serving build
   #
-  # returns [Docker::Container] a reference to Docker container
+  # return [Docker::Container] a reference to Docker container
   def docker_container
     @docker_container ||= Docker::Container.get(docker_container_id)
   end
 
-  # Returns container's connection remote addresses (and is connection forwarded or direct)
+  # Get container's connection remote addresses (and is connection forwarded or direct)
   #
-  # returns [Hash] remote connection address/type in form { 'addr:port' => true|false }
+  # return [Hash] remote connection address/type in form { 'addr:port' => true|false }
   def remotes
     remotes = {}
 
@@ -31,7 +31,7 @@ class Container < ActiveRecord::Base
 
   # Synchronize connection records in database with reality
   #
-  # returns [ActiveRecord::Associations::CollectionProxy] actual connections
+  # return [ActiveRecord::Associations::CollectionProxy] actual connections
   def synchronize_connections!
     connections = self.connections
 
@@ -46,6 +46,20 @@ class Container < ActiveRecord::Base
     end
 
     self.connections.reset
+  end
+
+  # return [String] direct remote connection address, if any
+  def direct_remote
+    return nil unless self.connections.direct.first
+
+    self.connections.direct.first.remote
+  end
+
+  # return [Array] forwarded [tunneled] remote connection addresses, if any
+  def forwarded_remotes
+    return nil if self.connections.forwarded.empty?
+
+    self.connections.forwarded.map { |c| c.remote }
   end
 
   private

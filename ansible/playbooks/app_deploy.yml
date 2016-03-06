@@ -31,6 +31,7 @@
         - Load database schema
         - Run database migrations
         - Pull Docker [base] image
+        - Download 3rd party assets
         - Reload application server
   handlers:
     - name: Install p.t.u. dependencies
@@ -64,6 +65,13 @@
       shell: "{{ bundler_cmd }} exec {{ app_path }}/script/tools/pull-docker-image"
       args:
         chdir: "{{ app_path }}"
+    - name: Download 3rd party assets
+      shell: "{{ app_path }}/script/tools/download-{{ item }}"
+      args:
+        chdir: "{{ app_path }}"
+      with_items:
+        - extjs
+        - icons
     - name: Reload application server
       shell: "sudo {{ app_reload_script }}"
       args:

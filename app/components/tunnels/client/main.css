@@ -1,0 +1,11 @@
+.regular-cell {
+  color: #3366cc;
+}
+
+.key-cell {
+  color: #666;
+}
+
+.x-btn-inner-default-toolbar-small, .x-menu-item-text {
+  margin-top: -2px;
+}

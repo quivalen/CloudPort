@@ -4,6 +4,8 @@
   tasks:
     - name: Update Apt cache
       apt: update_cache=yes
+    - name: Install unzip
+      apt: pkg=unzip state=latest
     - name: Install development essentials
       apt: pkg={{ item }} state=latest
       with_items:
