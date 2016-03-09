@@ -17,7 +17,6 @@ chdir {{ app_path }}
 env RAILS_ENV="{{ app_env }}"
 env DATABASE_PASSWORD="{{ mysql_app_password }}"
 env SECRET_KEY_BASE="{{ secret_key_base }}"
-env RAILS_SERVE_STATIC_FILES=yes
 env GOROOT="{{ go_root }}"
 env GOPATH="{{ go_path }}"
 env PATH="{{ path }}"
