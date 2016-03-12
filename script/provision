@@ -10,6 +10,8 @@ fi
 DEPLOY_ENV=${1}
 HOSTS_FILE=/etc/ansible/${DEPLOY_ENV}
 
+$(dirname $0)/ensure-secrets-file # generate secrets file [if does not exist]
+
 if [ "${DEPLOY_ENV}" == "production" ]; then
   APP_VERSION="master"
 else

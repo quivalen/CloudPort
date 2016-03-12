@@ -3,19 +3,7 @@
 
 PLAYBOOK_YML = "ansible/#{ENV.fetch('MODE', 'provision')}.yml"
 
-SECRETS_FILE = File.expand_path(File.dirname(__FILE__) + '/ansible/vars/secrets.yml')
-unless File.exist?(SECRETS_FILE)
-  require 'securerandom'
-  require 'yaml'
-
-  SECRETS = {
-    'mysql_root_password' => SecureRandom.base64,
-    'mysql_app_password'  => SecureRandom.base64,
-    'secret_key_base'     => SecureRandom.hex(64),
-  }
-
-  File.open(SECRETS_FILE, 'w') {|f| f.write SECRETS.to_yaml }
-end
+`script/ensure-secrets-file` # Generate secrets file [if does not exist]
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -60,7 +48,7 @@ Vagrant.configure(2) do |config|
   # Example for VirtualBox:
   #
   config.vm.provider "virtualbox" do |vb|
-    vb.name   = config.vm.hostname 
+    vb.name   = config.vm.hostname
     vb.cpus   = 4
     vb.memory = 2048
   end
