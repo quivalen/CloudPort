@@ -4,6 +4,10 @@
 #
 if [ $# -ne 1 ]; then
   echo "Usage: ${0} DEPLOY_ENV"
+  echo
+  echo "DEPLOY_ENV := { local | production | staging | [ANYTHING] }"
+  echo
+  echo "HINT: 'local' is a production environment used on localhost"
   exit 1
 fi
 
@@ -12,7 +16,7 @@ HOSTS_FILE=/etc/ansible/${DEPLOY_ENV}
 
 $(dirname $0)/ensure-secrets-file # generate secrets file [if does not exist]
 
-if [ "${DEPLOY_ENV}" == "production" ]; then
+if [[ "${DEPLOY_ENV}" == "local" || "${DEPLOY_ENV}" == "production" ]]; then
   APP_VERSION="master"
 else
   APP_VERSION="develop"
@@ -20,4 +24,8 @@ fi
 
 PLAYBOOK_FILE="$(dirname $0)/../ansible/$(basename ${0}).yml"
 
-ansible-playbook -i ${HOSTS_FILE} -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}
+if [[ "${DEPLOY_ENV}" == "local" ]]; then
+  ansible-playbook -c local -i 'localhost,' -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}
+else
+  ansible-playbook -i ${HOSTS_FILE} -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}
+fi
