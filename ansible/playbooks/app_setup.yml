@@ -16,6 +16,7 @@
     app_server_err_file: "{{ app_log_path }}/{{ app_server_name }}-err.log"
     app_server_pid_file: "{{ app_pid_path }}/{{ app_server_name }}.pid"
     app_host_file: "/etc/{{ app_name }}_hostname"
+    app_pass_file: "/etc/{{ app_name }}_password"
     scheduler_name: "sidekiq"
     scheduler_upstart_file: "/etc/init/{{ scheduler_name }}.conf"
     scheduler_log_file: "{{ app_log_path }}/{{ scheduler_name }}.log"
@@ -47,6 +48,12 @@
                 group={{ app_group_name }}
                 mode=0644
                 force=no
+    - name: Create file with WWW administrator's password
+      template: src=../templates/app_pass.j2
+                dest={{ app_pass_file }}
+                owner=root
+                group={{ app_group_name }}
+                mode=0640
     - name: Create Go path
       file: name={{ go_path }}
             owner={{ app_user_name }}

@@ -48,6 +48,17 @@ module CloudPort
       '127.0.0.1'
     end
 
+    # Reads CloudPort WWW administrator's password
+    #
+    # param [String] file name to read password from
+    #
+    # return [String] CloudPort WWW administrator's password
+    def web_admin_password(file_name = '/etc/cloudport_password')
+      return IO.read(file_name).split(%r{\n})[0].strip if File.exist?(file_name)
+
+      'portcloud'
+    end
+
     # Hostname to be tailored into p.t.u. builds
     config.hostname = cloudport_hostname
   end
