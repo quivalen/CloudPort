@@ -4,10 +4,13 @@
 #
 VERSION='v013'
 ARCHIVE="famfamfam_silk_icons_${VERSION}.zip"
+IMG_DIR="$(dirname ${0})/../../public/images"
 
 set -e
 
-pushd "$(dirname ${0})/../../public/images"
+mkdir -p ${IMG_DIR}
+
+pushd ${IMG_DIR}
   [[ -d icons ]] && exit 0
 
   wget "http://www.famfamfam.com/lab/icons/silk/${ARCHIVE}"
