@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160226104631) do
+ActiveRecord::Schema.define(version: 20160312175350) do
 
   create_table "builds", force: :cascade do |t|
     t.string   "ptu_build_id",       limit: 6,                       null: false
@@ -41,15 +41,15 @@ ActiveRecord::Schema.define(version: 20160226104631) do
     t.integer  "container_id",    limit: 4,                   null: false
     t.string   "remote",          limit: 255,                 null: false
     t.boolean  "is_forwarded",                default: false, null: false
-    t.boolean  "is_connected",                default: false, null: false
+    t.boolean  "is_connected",                default: true,  null: false
     t.datetime "connected_at",                                null: false
     t.datetime "disconnected_at",                             null: false
   end
 
   add_index "connections", ["container_id"], name: "index_connections_on_container_id", using: :btree
   add_index "connections", ["is_connected"], name: "index_connections_on_is_connected", using: :btree
-  add_index "connections", ["remote"], name: "index_connections_on_remote", unique: true, using: :btree
   add_index "connections", ["is_forwarded"], name: "index_connections_on_is_forwarded", using: :btree
+  add_index "connections", ["remote"], name: "index_connections_on_remote", unique: true, using: :btree
 
   create_table "containers", force: :cascade do |t|
     t.integer  "build_id",            limit: 4,   null: false
