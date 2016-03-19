@@ -1,3 +1,9 @@
+#
+# Build class is a heart of CloudPort.
+# It represents a p.t.u. build, tailored for a one single specific task.
+# Each build (client-side) has a Docker container (server-side) assigned.
+# Each build is designed to be used exclusively and destroyed after using.
+#
 class Build < ActiveRecord::Base
 
   extend Build::Globals
@@ -43,48 +49,59 @@ class Build < ActiveRecord::Base
     self.ssh_server_port = exposed_port + self.class.ssh_port_offset
   end
 
+  # return [String] an SSH server host:port to connect p.t.u. application
   def ssh_server
     @ssh_server ||= "#{ssh_server_address}:#{ssh_server_port.to_s}"
   end
 
+  # return [String] a (client-side) target host to forward tunnel traffic to
   def target_host
     @target_host ||= "#{target_address}:#{target_port.to_s}"
   end
 
+  # return [String] a TCP server host:port to listen for remote connections
   def exposed_host
     @exposed_host ||= "#{ssh_server_address}:#{exposed_port.to_s}"
   end
 
+  # return [String] a filesystem path where this particular p.t.u. build is stored
   def build_path
     @build_path ||= "#{self.class.build_root}/#{ptu_build_id}"
   end
 
+  # return [String] a filesystem path where binary file for this particular p.t.u. build is located
   def binary_path
     @binary_path ||= "#{build_path}/bin"
   end
 
+  # return [Symbol] build target operating system name
   def operating_system
     super.to_sym
   end
 
+  # return [Boolean] built for Linux?
   def linux?
     operating_system == :linux
   end
 
+  # return [Boolean] built for MacOSX?
   def darwin?
     operating_system == :darwin
   end
 
+  # return [Boolean] built for Windows?
   def windows?
     operating_system == :windows
   end
 
+  # return [String] a p.t.u. tailored binary file extension, if applicable
   def binary_extension
     return '.exe' if windows?
 
     ''
   end
 
+  # return [String] p.t.u. tailored binary file name
   def binary_file_name
     @binary_file ||= "ptu-#{operating_system}-#{cpu_architecture}-#{ptu_build_id}#{binary_extension}"
   end
