@@ -1,13 +1,21 @@
 class Container < ActiveRecord::Base
 
+  SSH_PORT = 22
+
   belongs_to :build
 
   has_many :connections, dependent: :delete_all
 
-  before_create :create_docker_container
-  after_destroy :delete_docker_container
+  before_validation :create_docker_container
+  before_destroy    :delete_docker_container
 
-  SSH_PORT = 22
+  validates :docker_container_id,
+    presence: true,
+    uniqueness: true,
+    format: { with: /\A[0-9a-f]+\z/ },
+    length: { is: 64 }
+
+  validates_associated :connections
 
   # Get reference to a Docker container serving build
   #
@@ -116,7 +124,7 @@ class Container < ActiveRecord::Base
   end
 
   def probe_remote_connections
-    netstat.map { |l| [l.split[3], l.split[4]] }
+    netstat.map { |l| [l.split[3], l.split[4]] }.sort.uniq
   end
 
 end

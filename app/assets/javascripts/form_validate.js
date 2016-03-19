@@ -1,5 +1,5 @@
 var targetAddressField = document.getElementById('target_address');
-var validTargetAddressRegex = /^[a-z0-9][a-zA-Z0-9\.\-]*$/;
+var validTargetAddressRegex = /^[a-z0-9][a-z0-9\.\-]*$/;
 var targetAddressValidBackgroundColor = targetAddressField.style.backgroundColor;
 var targetAddressInvalidBackgroundColor = 'pink';
 

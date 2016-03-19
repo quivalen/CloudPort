@@ -6,24 +6,87 @@
 #
 class Build < ActiveRecord::Base
 
-  extend Build::Globals
+  HOSTNAME_REGEX = /\A[a-z0-9][a-z0-9\.\-]+\z/
+  IP_ADDR_REGEX  = /\A((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\z/
 
+  extend  Build::Globals
   include Build::Tips
 
   has_one :container, dependent: :delete
 
-  before_create { |b| b.ptu_build_id = SecureRandom.hex(3) }
-
   before_create :create_tailored_build
   after_destroy :delete_tailored_build
+  after_create  { |b| Container.create!(build: b) }
 
-  after_create { |b| Container.create(build: b) }
+  validates :ptu_build_id,
+    presence: true,
+    uniqueness: true,
+    format: { with: /\A[0-9a-f]+\z/ },
+    length: { is: 6 }
+
+  validates :ssh_server_address,
+    presence: true,
+    format: { with: HOSTNAME_REGEX }
+
+  validates :ssh_server_port,
+    presence: true,
+    uniqueness: true,
+    numericality: {
+      only_integer: true,
+      greater_than_or_equal_to: 20000,
+      less_than: 30000
+    }
+
+  validates :ssh_username,
+    presence: true,
+    format: { with: /\A[a-z][a-z0-9_]+\z/ }
+
+  validates :ssh_password,
+    presence: true,
+    length: { minimum: 20 }
+
+  validates :target_address,
+    presence: true,
+    format: { with: HOSTNAME_REGEX }
+
+  validates :target_port,
+    presence: true,
+    numericality: {
+      only_integer: true,
+      greater_than: 0,
+      less_than: 65535
+    }
+
+  validates :exposed_bind,
+    presence: true,
+    format: { with: /\A0\.0\.0\.0\z/ }
+
+  validates :exposed_port,
+    presence: true,
+    uniqueness: true,
+    numericality: {
+      only_integer: true,
+      greater_than_or_equal_to: 10000,
+      less_than: 20000
+    }
+
+  validates :operating_system,
+    presence: true,
+    inclusion: { in: %w(linux darwin windows) }
+
+  validates :cpu_architecture,
+    presence: true,
+    inclusion: { in: %w(amd64 386) }
+
+  validates :client_ip_address,
+    presence: true,
+    format: { with: IP_ADDR_REGEX }
 
   def self.operating_systems
     @@operating_systems ||= {
-      linux:   'GNU/Linux',
-      darwin:  'MacOS X',
-      windows: 'Windows',
+      'linux'   => 'GNU/Linux',
+      'darwin'  => 'MacOS X',
+      'windows' => 'Windows',
     }
   end
 
@@ -46,7 +109,8 @@ class Build < ActiveRecord::Base
   )
     super
 
-    self.ssh_server_port = exposed_port + self.class.ssh_port_offset
+    self.ptu_build_id     = SecureRandom.hex(3)
+    self.ssh_server_port  = exposed_port + self.class.ssh_port_offset
   end
 
   # return [String] an SSH server host:port to connect p.t.u. application
@@ -74,24 +138,19 @@ class Build < ActiveRecord::Base
     @binary_path ||= "#{build_path}/bin"
   end
 
-  # return [Symbol] build target operating system name
-  def operating_system
-    super.to_sym
-  end
-
   # return [Boolean] built for Linux?
   def linux?
-    operating_system == :linux
+    operating_system == 'linux'
   end
 
   # return [Boolean] built for MacOSX?
   def darwin?
-    operating_system == :darwin
+    operating_system == 'darwin'
   end
 
   # return [Boolean] built for Windows?
   def windows?
-    operating_system == :windows
+    operating_system == 'windows'
   end
 
   # return [String] a p.t.u. tailored binary file extension, if applicable

@@ -1,12 +1,18 @@
 class Connection < ActiveRecord::Base
 
+  IP_PORT_REGEX   = /\A((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)):([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\z/
+  ZERO_TIMESTAMP  = '0000-01-01 00:00:00'.to_datetime
+
   belongs_to :container
+
+  validates :remote,
+    presence: true,
+    uniqueness: true,
+    format: { with: IP_PORT_REGEX }
 
   scope :active,    -> { where(is_connected: true) }
   scope :direct,    -> { where(is_connected: true, is_forwarded: false) }
   scope :forwarded, -> { where(is_connected: true, is_forwarded: true) }
-
-  ZERO_TIMESTAMP = '0000-01-01 00:00:00'.to_datetime
 
   def initialize(remote:, is_forwarded: false)
     super
