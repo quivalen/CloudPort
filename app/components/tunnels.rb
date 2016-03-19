@@ -21,11 +21,11 @@ class Tunnels < Netzke::Grid::Base
     d = !container.connections.direct.empty?
     f = !container.connections.forwarded.empty?
 
-    return 'connected'      if d && f
-    return 'half-connected' if d && !f
-    return 'messed-up'      if !d && f
+    return :conn if d && f
+    return :wait if d && !f
+    return :mess if !d && f
 
-    'disconnected'
+    :none
   end
 
   def direct_remote(remote)
@@ -102,7 +102,7 @@ class Tunnels < Netzke::Grid::Base
         name:   :connection_state,
         text:   'State',
         width:  100,
-        getter: lambda { |r|  "<div class='state state-#{connection_state(r.container) }' />" },
+        getter: lambda { |r|  "<div class='state-#{connection_state(r.container).to_s}'>#{connection_state(r.container).to_s.upcase}<div>" },
       ),
       column_defaults.merge(
         name:   :direct_remote,
