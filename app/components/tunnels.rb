@@ -84,7 +84,7 @@ class Tunnels < Netzke::Grid::Base
       column_defaults.merge(
         name:   :target_host,
         text:   'Destination',
-        width:  200,
+        width:  250,
       ),
       column_defaults.merge(
         name:  :os,
