@@ -16,5 +16,5 @@ function validateTargetAddress() {
 }
 
 function validateForm() {
-  return  isTargetAddressValid();
+  return isTargetAddressValid();
 }
