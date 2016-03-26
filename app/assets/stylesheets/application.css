@@ -37,18 +37,23 @@ select {
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-  color:    #3a90c9;
+  color: #3a90c9;
+  font-size: x-large;
+  padding-top: 3px;
+  padding-left: 3px;
 }
 
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-  color:    #3a90c9;
-  opacity:  1;
+  color: #3a90c9;
+  font-size: x-large;
+  opacity: 1;
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color:    #3a90c9;
+  color: #3a90c9;
+  font-size: x-large;
 }
 
 :placeholder-shown { /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
-  color:    #3a90c9;
+  color: #3a90c9;
 }
