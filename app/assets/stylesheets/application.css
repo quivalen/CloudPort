@@ -26,14 +26,12 @@ input[type=number]::-webkit-inner-spin-button {
 input[type=number] {
   -webkit-appearance: textfield;
   -moz-appearance: textfield;
-  appearance: textfield;
   margin: 0;
 }
 
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
-  appearance: none;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
@@ -52,8 +50,4 @@ select {
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
   color: #3a90c9;
   font-size: x-large;
-}
-
-:placeholder-shown { /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
-  color: #3a90c9;
 }
