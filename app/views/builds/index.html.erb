@@ -1,6 +1,6 @@
 <div class="viewport">
   <%= form_tag("/build", remote: true, class: "build") do %>
-    <%= label_tag(:expose, "Expose:") %>
+    <label class="expose">Expose:</label>
     <%= text_field_tag(:target_address, '', placeholder: 'Enter target hostname...', onkeyup: "validateTargetAddress()") %>
     <%= number_field_tag(:target_port, 22, min: 1, max: 65535) %>
     <%= submit_tag("Go!", onclick: "validateTargetAddress(); return validateForm()") %>
