@@ -6,6 +6,8 @@ class BuildsController < ApplicationController
 
     @cpu_architectures        = hash_to_options_for_select(Build.cpu_architectures.each)
     @default_cpu_architecture = Build::Defaults.cpu_architecture
+
+    @site_url = request.url.sub(%r{/$}, '')
   end
 
   def new
