@@ -18,6 +18,7 @@ env RAILS_ENV="{{ app_env }}"
 env DATABASE_PASSWORD="{{ mysql_app_password }}"
 env PATH="{{ path }}"
 env GEM_PATH="{{ gem_path }}"
+env RUBYOPT=-rbundler/setup
 env HOME="{{ app_user_home }}"
 
 export PATH
