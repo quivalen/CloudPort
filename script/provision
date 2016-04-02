@@ -13,6 +13,9 @@ fi
 
 DEPLOY_ENV=${1}
 HOSTS_FILE=/etc/ansible/${DEPLOY_ENV}
+PLAYBOOK_FILE="$(dirname $0)/../ansible/$(basename ${0}).yml"
+
+[[ -n "$(which ansible)" ]] || $(dirname $0)/install-ansible
 
 $(dirname $0)/dump-secrets-file # generate secrets file [if does not exist]
 
@@ -22,10 +25,8 @@ else
   APP_VERSION="develop"
 fi
 
-PLAYBOOK_FILE="$(dirname $0)/../ansible/$(basename ${0}).yml"
-
 if [[ "${DEPLOY_ENV}" == "local" ]]; then
-  ansible-playbook -c local -i 'localhost,' -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}
+  ansible-playbook -c local -i "$(dirname $0)/../ansible/hosts.local" -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}
 else
   ansible-playbook -i ${HOSTS_FILE} -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}
 fi
