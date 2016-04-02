@@ -2,7 +2,7 @@
 #
 # perform full provisioning || deploy code
 #
-if [ $# -ne 1 ]; then
+if [ ${#} -ne 1 ]; then
   echo "Usage: ${0} DEPLOY_ENV"
   echo
   echo "DEPLOY_ENV := { local | production | staging | [ANYTHING] }"
@@ -11,19 +11,19 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-DEPLOY_ENV=${1}
-HOSTS_FILE=/etc/ansible/${DEPLOY_ENV}
-PLAYBOOK_FILE="$(dirname $0)/../ansible/$(basename ${0}).yml"
+declare -r DEPLOY_ENV=${1}
+declare -r HOSTS_FILE=/etc/ansible/${DEPLOY_ENV}
+declare -r PLAYBOOK_FILE="$(dirname $0)/../ansible/$(basename ${0}).yml"
+declare -r APP_VERSION="$(git rev-parse --abbrev-ref HEAD)"
 
-[[ -n "$(which ansible)" ]] || $(dirname $0)/install-ansible
+echo
+echo "* Deploy: ${APP_VERSION}"
+echo
 
-$(dirname $0)/dump-secrets-file # generate secrets file [if does not exist]
+set -e
 
-if [[ "${DEPLOY_ENV}" == "local" || "${DEPLOY_ENV}" == "production" ]]; then
-  APP_VERSION="master"
-else
-  APP_VERSION="develop"
-fi
+source $(dirname $0)/_bootstrap.sh # bootstrap system [for given deploy environment]
+$(dirname $0)/dump-secrets-file    # generate secrets file [if it does not exist]
 
 if [[ "${DEPLOY_ENV}" == "local" ]]; then
   ansible-playbook -c local -i "$(dirname $0)/../ansible/hosts.local" -e app_version=${APP_VERSION} ${PLAYBOOK_FILE}
