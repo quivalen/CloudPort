@@ -14,7 +14,7 @@ fi
 DEPLOY_ENV=${1}
 HOSTS_FILE=/etc/ansible/${DEPLOY_ENV}
 
-$(dirname $0)/ensure-secrets-file # generate secrets file [if does not exist]
+$(dirname $0)/dump-secrets-file # generate secrets file [if does not exist]
 
 if [[ "${DEPLOY_ENV}" == "local" || "${DEPLOY_ENV}" == "production" ]]; then
   APP_VERSION="master"

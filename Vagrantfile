@@ -3,7 +3,7 @@
 
 PLAYBOOK_YML = "ansible/#{ENV.fetch('MODE', 'provision')}.yml"
 
-`script/ensure-secrets-file` # Generate secrets file [if does not exist]
+`script/dump-secrets-file` # Generate secrets file [if does not exist]
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
