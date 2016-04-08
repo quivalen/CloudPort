@@ -23,6 +23,7 @@ function install_ruby() {
 }
 
 if [[ "${DEPLOY_ENV}" == "local" ]]; then
+  [[ "$(uname -s)" == "Linux" ]] || die 'You should run it on Linux!'
   [[ -x "$(which apt-get)" ]] || die 'Apt-Get executable not found!'
   [[ "${LINUX_DISTRO}" == "Ubuntu" ]] || die 'Only supported distro is Ubuntu, sorry ;('
   [[ "${MACHINE_TYPE}" == "Virtual Machine" ]] || die 'Should be deployed only on virtual machines!'
