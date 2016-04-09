@@ -1,7 +1,25 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  docker_container_id: 
-
-two:
-  docker_container_id: 
+---
+container_269:
+  id: 269
+  build_id: 153
+  docker_container_id: fa86b7fc7652f0db7e2b9ba8f094b7e9085abbfee300644d5b948b2d6db329ee
+  created_at: 2016-03-19 22:56:04.000000000 Z
+  updated_at: 2016-03-19 22:56:04.000000000 Z
+container_270:
+  id: 270
+  build_id: 154
+  docker_container_id: 66a0b249b90452f16305b9fc926cff49cb97cf627ab8dd9375f491bfeab44549
+  created_at: 2016-04-02 22:21:47.000000000 Z
+  updated_at: 2016-04-02 22:21:47.000000000 Z
+container_271:
+  id: 271
+  build_id: 155
+  docker_container_id: e19863295e5c8f12be70e3af1ef2dfab4f0767cc58d5efb0fa0ceacc0e059d77
+  created_at: 2016-04-02 22:27:22.000000000 Z
+  updated_at: 2016-04-02 22:27:22.000000000 Z
+container_272:
+  id: 272
+  build_id: 156
+  docker_container_id: 5849339dcadbf10a60c157562b8b63fbc7395ec034847537d9efb95a3607b34f
+  created_at: 2016-04-02 22:33:35.000000000 Z
+  updated_at: 2016-04-02 22:33:35.000000000 Z

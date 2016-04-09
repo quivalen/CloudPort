@@ -1,23 +1,73 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  name: MyString
-  build_id: MyString
-  ssh_server: MyString
-  ssh_username: MyString
-  ssh_password: MyString
-  target_host: MyString
-  target_port: MyString
-  exposed_bind: MyString
-  exposed_port: 
-
-two:
-  name: MyString
-  build_id: MyString
-  ssh_server: MyString
-  ssh_username: MyString
-  ssh_password: MyString
-  target_host: MyString
-  target_port: MyString
-  exposed_bind: MyString
-  exposed_port: 
+---
+build_153:
+  id: 153
+  ptu_build_id: 8d6298
+  name: cloudport
+  ssh_server_address: qa.cloudport.xyz
+  ssh_server_port: 26636
+  ssh_username: root
+  ssh_password: 4e23a772cee937b2471de27b8cd7b36db4404b2f
+  target_address: gateway.google.com
+  target_port: 22
+  exposed_bind: 0.0.0.0
+  exposed_port: 16636
+  operating_system: linux
+  cpu_architecture: amd64
+  client_ip_address: 149.2.241.254
+  status: true
+  created_at: 2016-03-19 22:56:03.000000000 Z
+  updated_at: 2016-03-19 22:56:03.000000000 Z
+build_154:
+  id: 154
+  ptu_build_id: 540e6d
+  name: cloudport
+  ssh_server_address: qa.cloudport.xyz
+  ssh_server_port: 21992
+  ssh_username: root
+  ssh_password: e054b03695fc793dfafc531037cf84af10f73364
+  target_address: 10.0.55.10
+  target_port: 3389
+  exposed_bind: 0.0.0.0
+  exposed_port: 11992
+  operating_system: windows
+  cpu_architecture: amd64
+  client_ip_address: 154.223.62.234
+  status: true
+  created_at: 2016-04-02 22:21:45.000000000 Z
+  updated_at: 2016-04-02 22:21:45.000000000 Z
+build_155:
+  id: 155
+  ptu_build_id: cabb48
+  name: cloudport
+  ssh_server_address: qa.cloudport.xyz
+  ssh_server_port: 23246
+  ssh_username: root
+  ssh_password: bc22e5cf208f802d99ba10ea61f3b0253d82a611
+  target_address: thor.valhalla.net
+  target_port: 22
+  exposed_bind: 0.0.0.0
+  exposed_port: 13246
+  operating_system: darwin
+  cpu_architecture: amd64
+  client_ip_address: 242.219.68.75
+  status: true
+  created_at: 2016-04-02 22:27:13.000000000 Z
+  updated_at: 2016-04-02 22:27:13.000000000 Z
+build_156:
+  id: 156
+  ptu_build_id: 0e751f
+  name: cloudport
+  ssh_server_address: qa.cloudport.xyz
+  ssh_server_port: 28815
+  ssh_username: root
+  ssh_password: a1d99c810dbd9d1f169e6a2595c5cf9d9be4f3b0
+  target_address: rix.fatcat.com
+  target_port: 23
+  exposed_bind: 0.0.0.0
+  exposed_port: 18815
+  operating_system: windows
+  cpu_architecture: 386
+  client_ip_address: 184.57.234.137
+  status: true
+  created_at: 2016-04-02 22:33:33.000000000 Z
+  updated_at: 2016-04-02 22:33:33.000000000 Z
