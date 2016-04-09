@@ -40,8 +40,8 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # Where do we place ptu builds?
-  config.build_root = 'tmp/cloudport/builds'
+  # Where do we place p.t.u. builds?
+  config.build_root = Rails.root.to_s + '/tmp/cloudport/builds'
 
   # p.t.u repo URL
   config.ptu_repo_url =  ENV.fetch('PTU_REPO_URL', 'https://github.com/ivanilves/ptu.git')

@@ -135,7 +135,22 @@ class Build < ActiveRecord::Base
 
   # return [String] a filesystem path where binary file for this particular p.t.u. build is located
   def binary_path
-    @binary_path ||= "#{build_path}/bin"
+    "#{build_path}/bin"
+  end
+
+  # return [String] where to dump STDOUT of this p.t.u. build?
+  def build_stdout_destination
+    "#{build_path}/STDOUT"
+  end
+
+  # return [String] where to dump STDERR of this p.t.u. build?
+  def build_stderr_destination
+    "#{build_path}/STDERR"
+  end
+
+  # return [String] where to dump STDOUT and STDERR of the p.t.u build prepare process
+  def build_prepare_log
+    "#{self.class.build_root}/_PREPARE.#{ptu_build_id}"
   end
 
   # return [Boolean] built for Linux?
@@ -177,15 +192,15 @@ class Build < ActiveRecord::Base
     FileUtils.mkdir(build_path)
 
     if File.exist?(self.class.ptu_repo_tar)
-      system("tar -C #{build_path} -xf #{self.class.ptu_repo_tar}")
+      system("tar -C #{build_path} -xf #{self.class.ptu_repo_tar} #{prepare_output_redirects}")
     else
-      system("git clone --depth 1 #{self.class.ptu_repo_url} #{build_path}")
+      system("git clone --depth 1 #{self.class.ptu_repo_url} #{build_path} #{prepare_output_redirects}")
     end
   end
 
   def tailor_build!
     FileUtils.chdir(build_path) do
-      self.status = !!system("#{ptu_tailor_environment} #{self.class.ptu_tailor_command} #{ptu_tailor_options}")
+      self.status = !!system("#{ptu_tailor_environment} #{self.class.ptu_tailor_command} #{ptu_tailor_options} #{build_output_redirects}")
     end
 
     self.status
@@ -199,8 +214,17 @@ class Build < ActiveRecord::Base
     "-n #{name} -s #{ssh_server} -u #{ssh_username} -p #{ssh_password} -t #{target_host} -b #{exposed_bind} -e #{exposed_port}"
   end
 
+  def build_output_redirects
+    ">#{build_stdout_destination} 2>#{build_stderr_destination}"
+  end
+
+  def prepare_output_redirects
+    ">#{build_prepare_log} 2>&1"
+  end
+
   def delete_tailored_build
     FileUtils.rm_rf(build_path)
+    FileUtils.rm_rf(build_prepare_log)
   end
 
 end

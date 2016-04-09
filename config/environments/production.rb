@@ -77,7 +77,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Where do we place ptu builds?
+  # Where do we place p.t.u. builds?
   config.build_root = '/data/builds'
 
   # p.t.u repo URL
