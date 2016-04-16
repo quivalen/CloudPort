@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160312175350) do
+ActiveRecord::Schema.define(version: 20160417161503) do
 
   create_table "builds", force: :cascade do |t|
     t.string   "ptu_build_id",       limit: 6,                       null: false
@@ -61,6 +61,17 @@ ActiveRecord::Schema.define(version: 20160312175350) do
   add_index "containers", ["build_id"], name: "index_containers_on_build_id", unique: true, using: :btree
   add_index "containers", ["docker_container_id"], name: "index_containers_on_docker_container_id", unique: true, using: :btree
 
+  create_table "failover_rules", force: :cascade do |t|
+    t.integer  "container_id",      limit: 4,   null: false
+    t.string   "source_ip_address", limit: 255, null: false
+    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                    null: false
+  end
+
+  add_index "failover_rules", ["container_id"], name: "index_failover_rules_on_container_id", using: :btree
+  add_index "failover_rules", ["source_ip_address"], name: "index_failover_rules_on_source_ip_address", unique: true, using: :btree
+
   add_foreign_key "connections", "containers", on_delete: :cascade
   add_foreign_key "containers", "builds", on_delete: :cascade
+  add_foreign_key "failover_rules", "containers", on_delete: :cascade
 end

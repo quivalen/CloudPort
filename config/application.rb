@@ -6,6 +6,13 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+#
+# Global constants
+#
+HOSTNAME_REGEX = /\A[a-z0-9][a-z0-9\.\-]+\z/
+IP_ADDR_REGEX  = /\A((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\z/
+IP_PORT_REGEX  = /\A((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)):([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\z/
+
 module CloudPort
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -57,6 +64,24 @@ module CloudPort
       return IO.read(file_name).split(%r{\n})[0].strip if File.exist?(file_name)
 
       'portcloud'
+    end
+
+    # return [String] path to iptables binary
+    def iptables
+      return ENV['IPTABLES'] if ENV['IPTABLES']
+
+      'sudo /sbin/iptables'
+    end
+
+    # Should we invoke iptables binary?
+    # Outside production and staging we usually do not.
+    #
+    # return [Boolean] true, if we do invoke / false, if don't
+    def invoke_iptables?
+      return true if Rails.env.production?
+      return true if ENV['INVOKE_IPTABLES']
+
+      false
     end
 
     # Hostname to be tailored into p.t.u. builds

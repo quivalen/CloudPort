@@ -17,4 +17,10 @@ class ContainerTest < ActiveSupport::TestCase
       assert_equal 64, c.docker_container_id.length
     end
   end
+
+  test "each container should have valid IP address" do
+    Container.all.each do |c|
+      assert_match IP_ADDR_REGEX, c.ip_address
+    end
+  end
 end

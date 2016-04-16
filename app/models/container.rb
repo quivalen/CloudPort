@@ -4,7 +4,8 @@ class Container < ActiveRecord::Base
 
   belongs_to :build
 
-  has_many :connections, dependent: :delete_all
+  has_many :connections,    dependent: :delete_all
+  has_many :failover_rules, dependent: :delete_all
 
   before_validation :create_docker_container
   before_destroy    :delete_docker_container
@@ -68,6 +69,11 @@ class Container < ActiveRecord::Base
     return nil if self.connections.forwarded.empty?
 
     self.connections.forwarded.map { |c| c.remote }
+  end
+
+  # return [String] container's IP address
+  def ip_address
+    @ip_address ||= docker_container.info['NetworkSettings']['IPAddress']
   end
 
   private
