@@ -61,6 +61,9 @@ Rails.application.routes.draw do
   get 'build/:id'          => 'builds#show'
   get 'build/download/:id' => 'builds#download'
 
+  # Failover NAT rules
+  post 'failover_rules' => 'failover_rules#create'
+
   # Administrator interface
   get 'manage' => 'manage#index'
 
