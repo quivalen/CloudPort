@@ -7,8 +7,8 @@ class Container < ActiveRecord::Base
   has_many :connections,    dependent: :delete_all
   has_many :failover_rules, dependent: :delete_all
 
-  after_create   :create_docker_container
-  before_destroy :delete_docker_container
+  before_validation :create_docker_container, on: :create
+  before_destroy    :delete_docker_container
 
   validates :docker_container_id,
     presence: true,
