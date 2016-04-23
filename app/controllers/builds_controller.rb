@@ -29,6 +29,8 @@ class BuildsController < ApplicationController
     if @build.save
       render text: @build.ptu_build_id
     else
+      Rails.logger.error(@build.errors.messages)
+
       render nothing: true, status: :unprocessable_entity
     end
   end
