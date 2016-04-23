@@ -208,7 +208,7 @@ class Build < ActiveRecord::Base
   end
 
   def ptu_tailor_options
-    "-n #{name} -s #{ssh_server} -u #{ssh_username} -p #{ssh_password} -t #{target_host} -b #{exposed_bind} -e #{exposed_port}"
+    "-n #{name} -s #{ssh_server} -u #{ssh_username} -p #{ssh_password} -t #{target_host} -b #{exposed_bind} -e #{exposed_port} -f #{FailoverRule::DESTINATION_PORT}"
   end
 
   def build_output_redirects
