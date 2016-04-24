@@ -29,6 +29,28 @@ export PATH
 export HOME
 
 pre-start script
+  RETRY_MAX=30
+
+  DOCKER_RETRIES=0
+  while true; do
+    [[ ${DOCKER_RETRIES} -gt ${RETRY_MAX} ]] && exit 1
+
+    [[ ! -f /var/run/docker.sock ]] && break
+
+    sleep 1
+    let DOCKER_RETRIES+=1
+  done
+
+  MYSQL_RETRIES=0
+  while true; do
+    [[ ${MYSQL_RETRIES} -gt ${RETRY_MAX} ]] && exit 1
+
+    [[ "$(pgrep mysqld_safe | wc -l)" -gt 0 ]] && break
+
+    sleep 1
+    let MYSQL_RETRIES+=1
+  done
+
   sudo {{ app_pid_dir_script }}
 end script
 
