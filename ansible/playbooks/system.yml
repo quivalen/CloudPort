@@ -2,8 +2,12 @@
 - hosts: cloudport
   become: yes
   tasks:
-    - name: Update Apt cache
-      apt: update_cache=yes
+    - name: Update operating system
+      apt: upgrade=dist update_cache=yes
+           dpkg_options='force-confold,force-confdef'
+      notify:
+        - Remove unneeded packages
+        - Clean package cache
     - name: Install unzip
       apt: pkg=unzip state=latest
     - name: Install development essentials
@@ -20,3 +24,12 @@
       apt: pkg=redis-server state=latest
     - name: Ensure Redis service enabled and started
       service: name=redis-server enabled=yes state=started
+  handlers:
+    - name: Remove unneeded packages
+      shell: apt-get -y autoremove
+      args:
+        warn: no
+    - name: Clean package cache
+      shell: apt-get clean
+      args:
+        warn: no
