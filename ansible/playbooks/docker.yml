@@ -11,5 +11,10 @@
                       state=present update_cache=yes
     - name: Install Docker
       apt: name=docker-engine state=latest
+      notify:
+        - Reload Docker
     - name: Ensure Docker enabled and started
       service: name=docker enabled=yes state=started
+  handlers:
+    - name: Reload Docker
+      service: name=docker state=reloaded
