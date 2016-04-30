@@ -12,6 +12,7 @@ if ENV['START_CONTAINERS']
   Container.where(is_failed: false).each do |c|
     begin
       c.docker_container.start
+      c.failover_rules.each { |f| f.ensure! }
     rescue => e
       c.is_failed       = true
       c.failure_message = e.message
