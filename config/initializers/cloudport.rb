@@ -9,5 +9,13 @@ end
 # Start [Docker] containers, if ordered to
 #
 if ENV['START_CONTAINERS']
-  Container.all.each { |c| c.docker_container.start }
+  Container.where(is_failed: false).each do |c|
+    begin
+      c.docker_container.start
+    rescue => e
+      c.is_failed       = true
+      c.failure_message = e.message
+      c.save
+    end
+  end
 end

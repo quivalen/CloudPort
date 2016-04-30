@@ -6,7 +6,7 @@ class ConnectionWorker
   recurrence { secondly(15) }
 
   def perform
-    Container.all.each do |c|
+    Container.where(is_failed: false).each do |c|
       begin
         c.synchronize_connections!
       rescue => e

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160417161503) do
+ActiveRecord::Schema.define(version: 20160430194555) do
 
   create_table "builds", force: :cascade do |t|
     t.string   "ptu_build_id",       limit: 6,                       null: false
@@ -52,14 +52,17 @@ ActiveRecord::Schema.define(version: 20160417161503) do
   add_index "connections", ["remote"], name: "index_connections_on_remote", unique: true, using: :btree
 
   create_table "containers", force: :cascade do |t|
-    t.integer  "build_id",            limit: 4,   null: false
-    t.string   "docker_container_id", limit: 255, null: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.integer  "build_id",            limit: 4,                   null: false
+    t.string   "docker_container_id", limit: 255,                 null: false
+    t.boolean  "is_failed",                       default: false, null: false
+    t.string   "failure_message",     limit: 255, default: "",    null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
   end
 
   add_index "containers", ["build_id"], name: "index_containers_on_build_id", unique: true, using: :btree
   add_index "containers", ["docker_container_id"], name: "index_containers_on_docker_container_id", unique: true, using: :btree
+  add_index "containers", ["is_failed"], name: "index_containers_on_is_failed", using: :btree
 
   create_table "failover_rules", force: :cascade do |t|
     t.integer  "container_id",      limit: 4,   null: false
