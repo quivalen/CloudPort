@@ -8,7 +8,6 @@ app_user_home: '/deploy'
 app_path: "{{ app_user_home }}/{{ app_name }}"
 app_user_name: "{{ app_name }}"
 app_group_name: "{{ app_name }}"
-app_data_path: '/data'
 app_conf_file: "/etc/default/{{ app_name }}"
 
 app_reload_script: "{{ app_path }}/script/tools/reload-service"

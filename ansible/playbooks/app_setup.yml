@@ -60,12 +60,6 @@
             group={{ app_group_name }}
             mode=0755
             state=directory
-    - name: Create application data path
-      file: name={{ app_data_path }}
-            owner={{ app_user_name }}
-            group={{ app_group_name }}
-            mode=0755
-            state=directory
     - name: Create application log path
       file: name={{ app_log_path }}
             owner={{ app_user_name }}

@@ -78,7 +78,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Where do we place p.t.u. builds?
-  config.build_root = '/data/builds'
+  config.build_root = '/deploy/builds'
 
   # p.t.u repo URL
   config.ptu_repo_url = 'file:///deploy/ptu'
