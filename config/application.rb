@@ -47,7 +47,7 @@ module CloudPort
     # param [String] file name to extract hostname from
     #
     # return [String] CloudPort Server hostname
-    def cloudport_hostname(file_name = '/etc/cloudport_hostname')
+    def cloudport_hostname(file_name = '/deploy/hostname')
       return ENV['CLOUDPORT_HOSTNAME'].strip if ENV['CLOUDPORT_HOSTNAME']
 
       return IO.read(file_name).split(%r{\n})[0].strip if File.exist?(file_name)
@@ -60,7 +60,7 @@ module CloudPort
     # param [String] file name to read password from
     #
     # return [String] CloudPort WWW administrator's password
-    def web_admin_password(file_name = '/etc/cloudport_password')
+    def web_admin_password(file_name = '/deploy/password')
       return IO.read(file_name).split(%r{\n})[0].strip if File.exist?(file_name)
 
       'portcloud'

@@ -20,7 +20,7 @@ git clone https://github.com/ivanilves/CloudPort.git
 cd CloudPort
 ./script/provision local
 ```
-* Change CloudPort hostname by editing `/etc/cloudport_hostname` and running `sudo restart cloudport` then.
+* Change CloudPort hostname by editing `/deploy/hostname` and running `sudo restart cloudport` then.
 * Access management UI by entering `/manage` URL with username `cloudport` and default password `portcloud`.
 
 That's all! Really simple, righ? :wink:
