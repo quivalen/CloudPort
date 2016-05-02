@@ -13,13 +13,16 @@
       shell: "stop cloudport && mv -f {{ old_build_path }} {{ new_build_path }} && start cloudport"
       args:
         creates: "{{ new_build_path }}"
+        removes: "{{ old_build_path }}"
     - name: Remove old p.t.u. builds location (recreated by CloudPort's initializer)
       file: path={{ old_build_path }} state=absent
     - name: Move CloudPort hostname file to the new location
       shell: "mv -f {{ old_app_host_file }} {{ new_app_host_file }}"
       args:
         creates: "{{ new_app_host_file }}"
+        removes: "{{ old_app_host_file }}"
     - name: Move CloudPort password file to the new location
       shell: "mv -f {{ old_app_pass_file }} {{ new_app_pass_file }}"
       args:
         creates: "{{ new_app_pass_file }}"
+        removes: "{{ old_app_pass_file }}"
