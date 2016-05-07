@@ -4,14 +4,12 @@
     - ../vars/application.yml
     - ../vars/secrets.yml
   vars:
-    bundler_cmd: ". {{ app_conf_file }} && {{ app_user_gem_path }}/bin/bundle"
+    bundler_cmd: ". {{ app_conf_file }} && bundle"
     db_created_flag: "{{ app_user_home }}/.db_created"
     db_schema_loaded_flag: "{{ app_user_home }}/.db_schema_loaded"
   become: yes
   become_user: "{{ app_user_name }}"
   tasks:
-    - name: Install bundler
-      gem: name=bundler version={{ bundler_version }}
     - name: Get p.t.u. code from Git
       git: repo={{ ptu_repo }}
            dest={{ ptu_path }}

@@ -1,0 +1,36 @@
+---
+- hosts: cloudport
+  vars_files:
+    - ../vars/application.yml
+  vars:
+    rbenv_version: "v1.0.0"
+    ruby_build_version: "v20160426"
+    rbenv_path: "{{ app_user_home }}/.rbenv"
+    ruby_build_path: "{{ rbenv_path }}/plugins/ruby-build"
+  become: yes
+  become_user: "{{ app_user_name }}"
+  tasks:
+    - name: Install rbenv
+      git: repo=https://github.com/rbenv/rbenv.git
+           dest={{ rbenv_path }}
+           version={{ rbenv_version }}
+           force=yes
+    - name: Install ruby-build
+      git: repo=https://github.com/rbenv/ruby-build.git
+           dest={{ ruby_build_path }}
+           version={{ ruby_build_version }}
+           force=yes
+    - name: Install Ruby
+      shell: "{{ rbenv_path }}/bin/rbenv install {{ ruby_version }}"
+      args:
+        creates: "{{ rbenv_path }}/versions/{{ ruby_version }}"
+      notify:
+        - Set global Ruby version
+        - Install bundler
+  handlers:
+    - name: Set global Ruby version
+      shell: "{{ rbenv_path }}/bin/rbenv global {{ ruby_version }}"
+    - name: Install bundler
+      shell: "{{ rbenv_path }}/shims/gem install bundler -v {{ bundler_version }}"
+      args:
+        warn: no

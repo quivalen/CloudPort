@@ -2,4 +2,5 @@
 - include: playbooks/transformations.yml
 - include: playbooks/app_user.yml
 - include: playbooks/app_setup.yml
+- include: playbooks/rbenv.yml
 - include: playbooks/app_deploy.yml

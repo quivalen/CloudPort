@@ -26,3 +26,8 @@
       args:
         creates: "{{ new_app_pass_file }}"
         removes: "{{ old_app_pass_file }}"
+    - name: Remove Brightbox Ruby packages
+      apt: pkg={{ item }} state=absent purge=yes
+      with_items:
+        - "ruby2.2"
+        - "ruby2.2-dev"

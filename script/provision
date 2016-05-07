@@ -5,9 +5,9 @@
 if [ ${#} -ne 1 ]; then
   echo "Usage: ${0} DEPLOY_ENV"
   echo
-  echo "DEPLOY_ENV := { local | production | staging | [ANYTHING] }"
+  echo "DEPLOY_ENV := { local | [ANYTHING] }"
   echo
-  echo "HINT: 'local' is a production environment used on localhost"
+  echo "HINT: 'local' is a special environment used to deploy on localhost"
   exit 1
 fi
 

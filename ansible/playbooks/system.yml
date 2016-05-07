@@ -16,6 +16,8 @@
         - git
         - nodejs
         - build-essential
+        - libssl-dev
+        - libreadline-dev
     - name: Install Nginx HTTP server/reverse proxy
       apt: pkg=nginx state=latest
     - name: Ensure Nginx service enabled and started

@@ -13,11 +13,11 @@ app_conf_file: "/etc/default/{{ app_name }}"
 app_reload_script: "{{ app_path }}/script/tools/reload-service"
 app_pid_dir_script: "{{ app_path }}/script/tools/ensure-pid-dir"
 
-ruby_version: '2.2'
+ruby_version: '2.2.5'
+ruby_base_version: '2.2.0'
 bundler_version: '1.11.2'
 bundle_without: 'development test'
-app_user_gem_path: "{{ app_user_home }}/.gem/ruby/{{ ruby_version }}.0"
-bundle_gem_path: "{{ app_path }}/vendor/bundle/ruby/{{ ruby_version }}.0"
+bundle_gem_path: "{{ app_path }}/vendor/bundle/ruby/{{ ruby_base_version }}"
 
 mysql_app_username: "{{ app_name }}"
 
