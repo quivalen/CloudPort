@@ -7,6 +7,7 @@
     new_app_host_file: '/deploy/hostname'
     old_app_pass_file: '/etc/cloudport_password'
     new_app_pass_file: '/deploy/password'
+    bundle_ruby_path: "{{ app_path }}/vendor/bundle/ruby"
   become: yes
   tasks:
     - name: Move p.t.u. builds to the new location
@@ -31,3 +32,10 @@
       with_items:
         - "ruby2.2"
         - "ruby2.2-dev"
+      notify:
+        - Remove Ruby bundle created with Brightbox Ruby
+    - name: Remove Brightbox PPA
+      apt_repository: repo='ppa:brightbox/ruby-ng' state=absent update_cache=yes
+  handlers:
+    - name: Remove Ruby bundle created with Brightbox Ruby
+      file: path={{ bundle_ruby_path }} state=absent
