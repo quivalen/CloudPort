@@ -22,7 +22,28 @@ class Container < ActiveRecord::Base
   #
   # return [Docker::Container] a reference to Docker container
   def docker_container
-    @docker_container ||= Docker::Container.get(docker_container_id)
+    Docker::Container.get(docker_container_id)
+  end
+
+  # Checks, if Docker container exists
+  #
+  # return [Boolean] does it exist?
+  def docker_container_exists?
+    !!docker_container
+  rescue Docker::Error::NotFoundError
+    false
+  end
+
+  # Re-create backing Docker container
+  #
+  # return [Boolean] always true (or fails loudly)
+  def recreate_docker_container!
+    delete_docker_container if docker_container_exists?
+    create_docker_container
+
+    save!
+
+    true
   end
 
   # Get container's connection remote addresses (and is connection forwarded or direct)
@@ -73,7 +94,7 @@ class Container < ActiveRecord::Base
 
   # return [String] container's IP address
   def ip_address
-    @ip_address ||= docker_container.info['NetworkSettings']['IPAddress']
+    docker_container.info['NetworkSettings']['IPAddress']
   end
 
   private
@@ -93,7 +114,8 @@ class Container < ActiveRecord::Base
         guest_ssh_port      => [{ 'HostPort' => host_ssh_port }],
         guest_exposed_port  => [{ 'HostPort' => host_exposed_port }],
       },
-      'name' => build.ptu_build_id,
+      'Labels' => { 'environment' => Rails.env },
+      'name'   => "worker-#{build.ptu_build_id}",
     )
 
     container.start
@@ -117,8 +139,7 @@ class Container < ActiveRecord::Base
   def delete_docker_container
     container = docker_container
 
-    container.stop if container.info['State']['Running']
-    container.delete
+    container.delete(force: true)
   end
 
   def remote_connection_filter_regex

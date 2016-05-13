@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# CloudPort continuous integration script
+#
+[[ -n "${CI_DEBUG}" ]] && set -x
+
+set -e
+
+export RAILS_ENV='test'
+export DISABLE_SPRING=1
+
+bundle exec $(dirname ${0})/tools/pull-docker-image
+
+bundle exec rake db:migrate
+bundle exec rake db:fixtures:load
+bundle exec rake docker:containers:recreate
+
+bundle exec rake test

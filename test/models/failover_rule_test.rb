@@ -73,7 +73,7 @@ class FailoverRuleTest < ActiveSupport::TestCase
   test 'iptables command changes according to passed action' do
     t = FailoverRule.create(
       source_ip_address: random_ip,
-      container:         Container.first
+      container:         Container.last
     )
 
     assert_match /-A PREROUTING -s #{t.source_ip_address} -p tcp --dport 443 -j DNAT --to #{t.redirect_to}\z/,

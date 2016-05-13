@@ -29,7 +29,7 @@ class BuildTest < ActiveSupport::TestCase
     end
   end
 
-  test "build should manage its filesystem objects during its lifecycle" do
+  test "build should create/delete its filesystem objects during its lifecycle" do
     build = Build.new
 
     msg = 'exists before creation:'
@@ -47,7 +47,7 @@ class BuildTest < ActiveSupport::TestCase
     assert File.exist?(build.build_prepare_log), "#{msg} #{build.build_prepare_log}"
 
     refute_equal 0, File.size(build.build_stdout_destination)
-    assert_equal 0, File.size(build.build_stderr_destination)
+    assert_equal 0, File.size(build.build_stderr_destination), read_file(build.build_stderr_destination)
     refute_equal 0, File.size(build.build_prepare_log)
 
     build.destroy

@@ -23,4 +23,5 @@ class ContainerTest < ActiveSupport::TestCase
       assert_match IP_ADDR_REGEX, c.ip_address
     end
   end
+
 end

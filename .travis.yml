@@ -1,0 +1,25 @@
+sudo: required
+dist: trusty
+language: ruby
+
+notifications:
+  email: false
+
+env:
+  global:
+    - CI_DEBUG=yes
+    - GOPATH=/home/travis/go
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install iptables mysql-server
+  - mysql -e "CREATE DATABASE cloudport_test;" -uroot
+  - mysql -e "GRANT ALL PRIVILEGES ON cloudport_test.* TO cloudport IDENTIFIED by 'tropduolc';" -uroot
+  - git clone https://github.com/ivanilves/ptu.git && cd ptu && ./script/install && cd ..
+
+script: ./script/ci
+
+branches:
+  except:
+    - /^doc/
+    - /^test/
