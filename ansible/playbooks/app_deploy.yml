@@ -64,7 +64,7 @@
       args:
         chdir: "{{ app_path }}"
     - name: 3rd party assets
-      shell: "{{ app_path }}/script/tools/download-{{ item }}"
+      shell: "{{ app_path }}/script/tools/download-{{ item }} >/dev/null"
       args:
         chdir: "{{ app_path }}"
       with_items:
