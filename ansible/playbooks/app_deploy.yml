@@ -60,7 +60,7 @@
       args:
         chdir: "{{ app_path }}"
     - name: Pull Docker [base] image
-      shell: "{{ bundler_cmd }} exec {{ app_path }}/script/tools/pull-docker-image"
+      shell: "{{ bundler_cmd }} exec rake docker:images:pull"
       args:
         chdir: "{{ app_path }}"
     - name: 3rd party assets

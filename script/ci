@@ -9,10 +9,9 @@ set -e
 export RAILS_ENV='test'
 export DISABLE_SPRING=1
 
-bundle exec $(dirname ${0})/tools/pull-docker-image
-
 bundle exec rake db:migrate
 bundle exec rake db:fixtures:load
+bundle exec rake docker:images:pull
 bundle exec rake docker:containers:recreate
 
 bundle exec rake test
