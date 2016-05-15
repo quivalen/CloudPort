@@ -1,3 +1,4 @@
+[![Build status](https://travis-ci.org/ivanilves/CloudPort.svg?branch=master)](https://github.com/ivanilves/CloudPort)
 ![](https://raw.githubusercontent.com/ivanilves/CloudPort/master/public/images/cloudport.png)
 
 With CloudPort you can set up anonymous and secure reverse tunnels.
