@@ -51,3 +51,6 @@ gem 'sidetiq'
 
 # Rich client-server components framework for Web
 gem 'netzke'
+
+# jQuery UI assets (lightweight components)
+gem 'jquery-ui-rails'
