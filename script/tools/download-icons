@@ -13,7 +13,7 @@ mkdir -p ${IMG_DIR}
 pushd ${IMG_DIR}
   [[ -d icons ]] && exit 0
 
-  wget "http://www.famfamfam.com/lab/icons/silk/${ARCHIVE}"
+  wget -nv "http://www.famfamfam.com/lab/icons/silk/${ARCHIVE}"
 
   unzip ${ARCHIVE}
 

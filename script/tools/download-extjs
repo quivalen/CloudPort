@@ -11,7 +11,7 @@ set -e
 pushd "$(dirname ${0})/../../public"
   [[ -d ${EXT_DIR} ]] && exit 0
 
-  wget "http://cdn.sencha.com/ext/gpl/${ARCHIVE}"
+  wget -nv "http://cdn.sencha.com/ext/gpl/${ARCHIVE}"
 
   unzip ${ARCHIVE}
 
