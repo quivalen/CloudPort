@@ -1,5 +1,7 @@
 ---
 - hosts: cloudport
+  vars_files:
+    - ../vars/application.yml
   vars:
     old_build_path: '/data/builds'
     new_build_path: '/deploy/builds'
