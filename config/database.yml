@@ -14,7 +14,7 @@ default: &default
   encoding: utf8
   pool: 5
   username: cloudport
-  password: <%= ENV.fetch('DATABASE_PASSWORD', 'tropduolc') %>
+  password: <%= ENV.fetch('DATABASE_PASSWORD', 'portcloud') %>
   host: localhost
 
 development:

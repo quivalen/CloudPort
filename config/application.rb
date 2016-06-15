@@ -55,17 +55,6 @@ module CloudPort
       '127.0.0.1'
     end
 
-    # Reads CloudPort WWW administrator's password
-    #
-    # param [String] file name to read password from
-    #
-    # return [String] CloudPort WWW administrator's password
-    def web_admin_password(file_name = '/deploy/password')
-      return IO.read(file_name).split(%r{\n})[0].strip if File.exist?(file_name)
-
-      'portcloud'
-    end
-
     # return [String] path to iptables binary
     def iptables
       return ENV['IPTABLES'] if ENV['IPTABLES']
