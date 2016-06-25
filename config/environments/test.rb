@@ -44,7 +44,7 @@ Rails.application.configure do
   config.build_root = Rails.root.to_s + '/tmp/cloudport/builds'
 
   # p.t.u repo URL
-  config.ptu_repo_url =  ENV.fetch('PTU_REPO_URL', 'https://github.com/ivanilves/ptu.git')
+  config.ptu_repo_url = ENV.fetch('PTU_REPO_URL', 'https://github.com/ivanilves/ptu.git')
 
   # p.t.u repo tar file (optional)
   config.ptu_repo_tar = ENV.fetch('PTU_REPO_TAR', '/tmp/ptu.tar')

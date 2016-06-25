@@ -7,7 +7,7 @@ class Manage < Netzke::Viewport::Base
     c.items  = [:head, :tunnels]
   end
 
- component :tunnels
- component :head
+  component :tunnels
+  component :head
 
 end
