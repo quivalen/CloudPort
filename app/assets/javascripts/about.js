@@ -2,7 +2,7 @@ $(document).ready(function () {
   $(function () {
     $("#about-dialog").dialog({
       width: 800,
-      height: 650,
+      height: 700,
       autoOpen: false,
       modal: true,
       dialogClass: "about",
