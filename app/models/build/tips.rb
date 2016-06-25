@@ -16,7 +16,7 @@ module Build::Tips
       return "Unbelievable, all you need to do is just download and run application we have built!"
     end
 
-    "Download application. Set executable bit with \"chmod +x #{binary_file_name}\" and run it!"
+    "Download, make it executable with \"chmod +x #{binary_file_name}\" and run! (in terminal)"
   end
 
 end
