@@ -3,7 +3,7 @@ class ManageController < ApplicationController
 
   http_basic_authenticate_with(
     name:     'cloudport',
-    password: Proc.new do
+    password: lambda do
                 file_name = '/deploy/password'
                 return IO.read(file_name).split(%r{\n})[0].strip if File.exist?(file_name)
                 'portcloud'
