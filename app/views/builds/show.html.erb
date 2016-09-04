@@ -6,7 +6,7 @@
     on <b><%= @build.os %></b>
   </p>
 <p>
-  <a href="<%= url_for(action: :download, id: @build.ptu_build_id) %>">
+  <a target="_blank" href="<%= url_for(action: :download, id: @build.ptu_build_id) %>">
     <%= image_tag(
       "download.png",
       class: "download",
