@@ -1,5 +1,5 @@
 ---
-go_version: '1.5.2'
+go_version: '1.7.1'
 go_system: 'linux-amd64'
 go_prefix: '/usr/local'
 go_unpack_dir: "{{ go_prefix }}/go"
