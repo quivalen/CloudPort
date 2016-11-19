@@ -54,3 +54,6 @@ gem 'netzke'
 
 # jQuery UI assets (lightweight components)
 gem 'jquery-ui-rails'
+
+# Data slicer for ActiveRecord
+gem 'table_print'

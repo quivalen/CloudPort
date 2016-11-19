@@ -170,6 +170,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    table_print (1.5.6)
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (2.0.2)
@@ -206,6 +207,7 @@ DEPENDENCIES
   sidekiq
   sidetiq
   spring
+  table_print
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
