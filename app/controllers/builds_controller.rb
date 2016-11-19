@@ -1,4 +1,5 @@
 class BuildsController < ApplicationController
+  skip_before_filter :verify_authenticity_token, only: :download
 
   def index
     @operating_systems        = hash_to_options_for_select(Build.operating_systems)
