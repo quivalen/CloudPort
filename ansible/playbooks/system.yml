@@ -18,6 +18,7 @@
         - build-essential
         - libssl-dev
         - libreadline-dev
+        - libgmp-dev
     - name: Install Nginx HTTP server/reverse proxy
       apt: pkg=nginx state=latest
     - name: Ensure Nginx service enabled and started
