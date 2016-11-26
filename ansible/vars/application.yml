@@ -13,9 +13,9 @@ app_conf_file: "/etc/default/{{ app_name }}"
 app_reload_script: "{{ app_path }}/script/tools/reload-service"
 app_pid_dir_script: "{{ app_path }}/script/tools/ensure-pid-dir"
 
-ruby_version: '2.2.5'
+ruby_version: '2.2.6'
 ruby_base_version: '2.2.0'
-bundler_version: '1.11.2'
+bundler_version: '1.13.6'
 bundle_without: 'development test'
 bundle_gem_path: "{{ app_path }}/vendor/bundle/ruby/{{ ruby_base_version }}"
 
