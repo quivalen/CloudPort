@@ -48,6 +48,7 @@ end
 # Simple, efficient background processing for Ruby
 gem 'sidekiq'
 gem 'sidetiq'
+gem 'sidekiq-failures'
 
 # Rich client-server components framework for Web
 gem 'netzke'

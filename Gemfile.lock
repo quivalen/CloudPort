@@ -157,6 +157,8 @@ GEM
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
       redis (~> 3.2, >= 3.2.1)
+    sidekiq-failures (0.4.5)
+      sidekiq (>= 2.16.0)
     sidetiq (0.7.2)
       celluloid (>= 0.17.3)
       ice_cube (~> 0.14.0)
@@ -205,6 +207,7 @@ DEPENDENCIES
   sass-rails
   sdoc
   sidekiq
+  sidekiq-failures
   sidetiq
   spring
   table_print
@@ -213,4 +216,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.12.3
+   1.13.6
