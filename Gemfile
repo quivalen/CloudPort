@@ -51,7 +51,7 @@ gem 'sidetiq'
 gem 'sidekiq-failures'
 
 # Rich client-server components framework for Web
-gem 'netzke'
+gem 'netzke', '1.0.0.0'
 
 # jQuery UI assets (lightweight components)
 gem 'jquery-ui-rails'
