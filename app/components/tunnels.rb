@@ -18,12 +18,14 @@ class Tunnels < Netzke::Grid::Base
   end
 
   def connection_state(container)
-    d = !container.connections.direct.empty?
-    f = !container.connections.forwarded.empty?
+    connected_direct    = !container.connections.direct.empty?
+    connected_forwarded = !container.connections.forwarded.empty?
+    disonnected         = !container.connections.disconnected.empty?
 
-    return :conn if d && f
-    return :wait if d && !f
-    return :mess if !d && f
+    return :conn if connected_direct && connected_forwarded
+    return :wait if connected_direct && !connected_forwarded
+    return :mess if !connected_direct && connected_forwarded
+    return :disc if disonnected
 
     :none
   end

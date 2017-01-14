@@ -9,9 +9,10 @@ class Connection < ActiveRecord::Base
     uniqueness: true,
     format: { with: IP_PORT_REGEX }
 
-  scope :active,    -> { where(is_connected: true) }
-  scope :direct,    -> { where(is_connected: true, is_forwarded: false) }
-  scope :forwarded, -> { where(is_connected: true, is_forwarded: true) }
+  scope :active,        -> { where(is_connected: true) }
+  scope :direct,        -> { where(is_connected: true,  is_forwarded: false) }
+  scope :forwarded,     -> { where(is_connected: true,  is_forwarded: true) }
+  scope :disconnected,  -> { where(is_connected: false, is_forwarded: true) }
 
   def initialize(remote:, is_forwarded: false)
     super
