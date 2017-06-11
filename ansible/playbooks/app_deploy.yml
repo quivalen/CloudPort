@@ -18,6 +18,7 @@
       notify:
         - Install p.t.u. dependencies
         - Create p.t.u. tarball from repo
+        - Checkout working version of ssh package
     - name: Get application code from Git
       git: repo={{ app_repo }}
            dest={{ app_path }}
@@ -39,6 +40,11 @@
     - name: Create p.t.u. tarball from repo
       shell: "tar -C {{ ptu_path }} -c . -f {{ ptu_path }}.tar"
       args:
+        warn: no
+    - name: Checkout working version of ssh package
+      shell: "git checkout 459e26527287adbc2adcc5d0d49abff9a5f315a7"
+      args:
+        chdir: "{{ app_user_home }}/go/1.7.1/src/golang.org/x/crypto/ssh"
         warn: no
     - name: Bundle install
       shell: "{{ bundler_cmd }} install --retry=5 --deployment --without '{{ bundle_without }}'"

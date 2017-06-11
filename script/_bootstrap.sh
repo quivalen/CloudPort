@@ -11,15 +11,15 @@ function die() {
   exit 1
 }
 
+function install_apt_https() {
+  sudo apt-get -y install apt-transport-https
+}
+
 function install_ansible() {
   sudo apt-get -y install software-properties-common
   sudo apt-add-repository -y ppa:ansible/ansible
   sudo apt-get update
   sudo apt-get -y install ansible
-}
-
-function install_apt_https() {
-  sudo apt-get -y install apt-transport-https
 }
 
 function install_ruby() {
@@ -34,9 +34,9 @@ if [[ "${DEPLOY_ENV}" == "local" ]]; then
 
   sudo apt-get update
 
+  [[ -x /usr/lib/apt/methods/https ]] || install_apt_https
   [[ -x "$(which ansible)" ]] || install_ansible
   [[ -x "$(which ruby)" ]] || install_ruby
-  [[ -x /usr/lib/apt/methods/https ]] || install_apt_https
 else
   [[ -x "$(which ruby)" ]] || die 'Ruby executable not found!'
   [[ -x "$(which ansible)" ]] || die 'Ansible executable not found!'
