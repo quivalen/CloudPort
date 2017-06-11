@@ -18,6 +18,10 @@ function install_ansible() {
   sudo apt-get -y install ansible
 }
 
+function install_apt_https() {
+  sudo apt-get -y install apt-transport-https
+}
+
 function install_ruby() {
   sudo apt-get -y install ruby
 }
@@ -32,6 +36,7 @@ if [[ "${DEPLOY_ENV}" == "local" ]]; then
 
   [[ -x "$(which ansible)" ]] || install_ansible
   [[ -x "$(which ruby)" ]] || install_ruby
+  [[ -x /usr/lib/apt/methods/https ]] || install_apt_https
 else
   [[ -x "$(which ruby)" ]] || die 'Ruby executable not found!'
   [[ -x "$(which ansible)" ]] || die 'Ansible executable not found!'
